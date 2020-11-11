@@ -7,8 +7,6 @@ namespace API.Authentication
 {
     public static class UserRoles
     {
-        public const string Admin = "Admin";
-        public const string User = "User";
-        public const string Lawyer = "Lawyer";
+        public static string[] Roles = new string[] {"Admin", "User", "Lawyer"};
     }
 }

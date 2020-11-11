@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using API.Areas.Identity.Data;
 using API.Authentication;
+using System.Linq;
 
 namespace JWTAuthentication.Controllers
 {
@@ -72,56 +73,11 @@ namespace JWTAuthentication.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            var userExists = await userManager.FindByNameAsync(model.Username);
-            if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
-
-            AppUser user = new AppUser()
+            if(!(Array.IndexOf(UserRoles.Roles, model.Role) >= 0))
             {
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username
-            };
-            var result = await userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
-
-            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
-        }
-
-        [HttpPost]
-        [Route("register-admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
-        {
-            var userExists = await userManager.FindByNameAsync(model.Username);
-            if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
-
-            AppUser user = new AppUser()
-            {
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username
-            };
-            var result = await userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
-
-            if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
-                await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-            if (!await roleManager.RoleExistsAsync(UserRoles.User))
-                await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
-
-            if (await roleManager.RoleExistsAsync(UserRoles.Admin))
-            {
-                await userManager.AddToRoleAsync(user, UserRoles.Admin);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Invalid role!" });
             }
-
-            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
-        }
-
-        [HttpPost]
-        [Route("register-lawyer")]
-        public async Task<IActionResult> RegisterLawyer([FromBody] RegisterModel model)
-        {
+            
             var userExists = await userManager.FindByNameAsync(model.Username);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
@@ -133,13 +89,11 @@ namespace JWTAuthentication.Controllers
             };
             var result = await userManager.CreateAsync(user, model.Password);
 
-            if (!await roleManager.RoleExistsAsync(UserRoles.Lawyer))
-                await roleManager.CreateAsync(new IdentityRole(UserRoles.Lawyer));
+            if (!await roleManager.RoleExistsAsync(model.Role))
+                await roleManager.CreateAsync(new IdentityRole(model.Role));
 
-            if (await roleManager.RoleExistsAsync(UserRoles.Lawyer))
-            {
-                await userManager.AddToRoleAsync(user, UserRoles.Lawyer);
-            }
+            if (await roleManager.RoleExistsAsync(model.Role))
+                await userManager.AddToRoleAsync(user, model.Role);
 
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
