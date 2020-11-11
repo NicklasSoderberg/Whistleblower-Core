@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace API.Controllers
 {
-    [Authorize(Roles = UserRoles.Admin)]
+    [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Lawyer)] 
     [Route("api/[controller]")]
     [ApiController]
     public class WeatherForecastController : ControllerBase
