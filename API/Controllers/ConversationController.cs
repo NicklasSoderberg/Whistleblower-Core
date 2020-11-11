@@ -12,12 +12,12 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ConversationsController : ControllerBase
+    public class ConversationController : ControllerBase
     {
         private readonly IWhistleRepository _repository;
         private readonly IMapper _mapper;
 
-        public ConversationsController(IWhistleRepository repository, IMapper mapper)
+        public ConversationController(IWhistleRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
