@@ -33,7 +33,7 @@ namespace API.Controllers
             }
             catch
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "");
             }
         }
 
@@ -47,7 +47,7 @@ namespace API.Controllers
             }
             catch
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "");
             }
         }
 
@@ -65,7 +65,7 @@ namespace API.Controllers
             }
             catch
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "");
             }
             return BadRequest();
         }
@@ -86,7 +86,7 @@ namespace API.Controllers
             }
             catch
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "");
             }
             return BadRequest();
         }
@@ -107,7 +107,7 @@ namespace API.Controllers
             }
             catch
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "");
             }
             return BadRequest();
         }
