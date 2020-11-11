@@ -13,6 +13,8 @@ namespace API.Data
         {
             this.CreateMap<Whistle, DtoWhistle>();
             this.CreateMap<DtoWhistle, Whistle>();
+            this.CreateMap<Conversation, DtoConversation>();
+            this.CreateMap<DtoConversation, Conversation>();
         }
     }
 }

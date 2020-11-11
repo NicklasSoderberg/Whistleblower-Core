@@ -43,9 +43,10 @@ namespace API.Data
             return await query.ToArrayAsync();
         }
 
-        public Task<Conversation[]> GetConversation(int WhistleID)
+        public async Task<Conversation[]> GetConversation(int WhistleID)
         {
-            throw new NotImplementedException();
+            IQueryable<Conversation> query = _context.Conversations.Where(c => c.WhistleID == WhistleID);
+            return await query.ToArrayAsync();
         }
 
         public async Task<Whistle> GetWhistle(int WhistleID)
@@ -53,6 +54,5 @@ namespace API.Data
             IQueryable<Whistle> query = _context.Whistles.Where(c => c.WhistleID == WhistleID);
             return await query.FirstOrDefaultAsync();
         }
-
     }
 }

@@ -22,7 +22,7 @@ namespace API.Data
 
         // Conversation
         Task<Conversation[]> GetConversation(int WhistleID);
-
+        
         // File
     }
 }
