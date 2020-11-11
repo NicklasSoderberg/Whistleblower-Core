@@ -15,6 +15,8 @@ namespace API.Data
             this.CreateMap<DtoWhistle, Whistle>();
             this.CreateMap<Conversation, DtoConversation>();
             this.CreateMap<DtoConversation, Conversation>();
+            this.CreateMap<File, DtoFile>();
+            this.CreateMap<DtoFile, File>();
         }
     }
 }
