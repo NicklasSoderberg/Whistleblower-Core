@@ -9,6 +9,7 @@ namespace API.Data.Entities
     {
         public int WhistleID { get; set; }
         public Guid? LawyerID { get; set; }
+        public Guid? UserID { get; set; }
         public string AboutInfo { get; set; }
         public string WhenInfo { get; set; }
         public string WhereInfo { get; set; }
