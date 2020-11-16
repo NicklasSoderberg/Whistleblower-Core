@@ -1,5 +1,12 @@
 <template>
   <div class="hello">
+    <vs-button
+        border
+        :active="active == 0"
+        @click="active = 0"
+      >
+        Active
+      </vs-button>
     <h1>{{ msg }}</h1>
     <p>
       For a guide and recipes on how to configure / customize this project,<br>
