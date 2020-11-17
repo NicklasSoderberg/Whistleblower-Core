@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
+    <img alt="Vue logo" src="./assets/omegapoint.png">
     <main>
       <router-view/>
     </main>
@@ -15,10 +15,6 @@ export default {
 </script>
 
 <style>
-.content {
-  margin: auto;
-  width: 50%;
-}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
