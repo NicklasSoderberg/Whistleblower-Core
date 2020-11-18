@@ -33,7 +33,7 @@
     <vs-button flat @click="active=!active">Nästa</vs-button>
     </vs-row>
 
-    <vs-dialog blur="true" not-close="true" v-model="active">
+    <vs-dialog blur not-close v-model="active">
         <h2>Vill du skicka ärendet?</h2>
         <div class="con-form">
           <h4>Du kan inte redigera ditt ärende förrens du fått svar från oss.</h4>
@@ -43,7 +43,6 @@
          <vs-button gradient primary @click="active=!active">Skicka ärende</vs-button>
       </vs-row>
       </vs-dialog>
-
   </div>
 </template>
 
