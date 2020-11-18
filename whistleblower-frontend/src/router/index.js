@@ -1,17 +1,18 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import Home from '../components/Home.vue';
+import HomePage from '../components/HomePage.vue';
 import Create from '../components/Create.vue';
 import FollowUp from '../components/FollowUp.vue';
+import Login from '../components/LoginPage.vue';
 
 Vue.use(Router);
 
 export default new Router({
   routes: [{
     path: '/',
-    name: 'Home',
-    component: Home,
+    name: 'HomePage',
+    component: HomePage,
   },
   {
     path: '/create',
@@ -22,5 +23,10 @@ export default new Router({
     path: '/followup',
     name: 'FollowUp',
     component: FollowUp,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
   }],
 });
