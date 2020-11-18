@@ -4,8 +4,8 @@
   <div class="grid">
      <vs-row  justify="center" style="margin-bottom: 5px">
         <vs-input v-model="username" placeholder="User name">
-          <template #message-danger v-if="username === ''">
-            Requried
+          <template class="" #message-danger v-if="username === ''">
+            <p>Requried</p>
         </template>
           <template #icon>
             <i class='bx bx-user'></i>
@@ -14,11 +14,16 @@
 </vs-row>
 
 <vs-row justify="center" align="center">
-        <vs-input type="password" v-model="password" placeholder="Password">
+  <div justify="left" align="left">
+        <vs-input type="password" v-model="password" placeholder="Password" justify="left">
           <template #icon>
             <i class='bx bx-lock-open-alt'></i>
           </template>
+          <template #message-danger v-if="username === ''">
+            <p v-if="true">Capslock är på</p>
+        </template>
         </vs-input>
+          </div>
       </vs-row>
 
 <vs-row justify="center" align="center">
@@ -67,4 +72,5 @@ export default {
   right: 8%;
   display: block;
 }
+
 </style>
