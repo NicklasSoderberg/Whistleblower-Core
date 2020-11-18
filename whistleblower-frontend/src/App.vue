@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
+    <NavigationBar :LoggedIn="false"></NavigationBar>
     <main>
       <router-view/>
     </main>
@@ -8,9 +8,13 @@
 </template>
 
 <script>
+import NavigationBar from './components/NavigationBar.vue';
 
 export default {
   name: 'App',
+  components: {
+    NavigationBar,
+  },
 };
 </script>
 
