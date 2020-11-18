@@ -43,7 +43,6 @@ export default {
     password: '',
     active: 0,
   }),
-
   methods: {
     login() {
       if (this.input.username !== '' && this.input.password !== '') {
