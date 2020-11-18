@@ -1,17 +1,28 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import Login from '../components/LoginPage.vue';
-import HelloWorld from '../components/HelloWorld.vue';
 import HomePage from '../components/HomePage.vue';
+import Create from '../components/Create.vue';
+import FollowUp from '../components/FollowUp.vue';
+import Login from '../components/LoginPage.vue';
 
 Vue.use(Router);
 
 export default new Router({
   routes: [{
     path: '/',
-    name: 'Home',
-    component: HelloWorld,
+    name: 'HomePage',
+    component: HomePage,
+  },
+  {
+    path: '/create',
+    name: 'Create',
+    component: Create,
+  },
+  {
+    path: '/followup',
+    name: 'FollowUp',
+    component: FollowUp,
   },
   {
     path: '/login',
