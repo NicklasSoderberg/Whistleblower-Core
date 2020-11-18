@@ -20,23 +20,6 @@
 
           <br>Inom 10 dagar kan du läsa en eventuell följdfråga eller ett svar från oss.
         </p>
-        <vs-row
-          justify="center"
-          align="center"
-        >
-          <vs-button
-            success
-            @click="redirectToCreateWhistle()"
-          >
-            Skapa ärende!
-          </vs-button>
-          <vs-button
-            success
-            @click="redirectToUserLogin()"
-          >
-            Följ upp ärendet
-          </vs-button>
-        </vs-row>
 
         <h3 style="text-align:center">
           Vi vill göra rätt
