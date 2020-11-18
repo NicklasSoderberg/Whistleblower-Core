@@ -2,38 +2,34 @@
 
 <body >
   <div class="grid">
+          <h3>Ange Användarnamn och lösenord för att logga in</h3>
      <vs-row  justify="center" style="margin-bottom: 5px">
-        <vs-input v-model="username" placeholder="User name">
-          <template class="" #message-danger v-if="username === ''">
-            <p>Requried</p>
-        </template>
+       <div justify="left" align="left">
+        <vs-input :state="stateUser" v-model="username" :placeholder="userPlaceholder">
           <template #icon>
             <i class='bx bx-user'></i>
           </template>
         </vs-input>
+       </div>
 </vs-row>
 
 <vs-row justify="center" align="center">
   <div justify="left" align="left">
-        <vs-input type="password" v-model="password" placeholder="Password" justify="left">
+       <vs-input :state="statePass" type="password"
+        v-model="password" :placeholder="passPlaceholder">
           <template #icon>
             <i class='bx bx-lock-open-alt'></i>
           </template>
-          <template #message-danger v-if="username === ''">
-            <p v-if="true">Capslock är på</p>
+          <template #message-danger v-if="false">
+            <p>Capslock är på</p>
         </template>
         </vs-input>
-          </div>
-      </vs-row>
 
-<vs-row justify="center" align="center">
-        <vs-button class="button-positioning"
-        flat
-        :active="active == 1"
-        @click="active = 1"
-      >
-        login
-      </vs-button>
+        <vs-row>
+        <vs-button gradient primary @click="this.login">Logga in</vs-button>
+        </vs-row>
+  </div>
+
       </vs-row>
 
   </div>
@@ -41,25 +37,62 @@
 </template>
 
 <script>
-
 export default {
   data: () => ({
     username: '',
     password: '',
     active: 0,
+    userInput: true,
+    passInput: true,
+    caps: false,
   }),
+  computed: {
+    stateUser() {
+      return this.userInput ? 'dark' : 'danger';
+    },
+    statePass() {
+      return this.passInput ? 'dark' : 'danger';
+    },
+    passPlaceholder() {
+      return this.passInput ? 'Lösenord' : 'Måste anges';
+    },
+    userPlaceholder() {
+      return this.userInput ? 'Användarnamn' : 'Måste anges';
+    },
+  },
   methods: {
-    login() {
-      if (this.input.username !== '' && this.input.password !== '') {
-        if (this.input.username === this.$parent.mockAccount.username
-         && this.input.password === this.$parent.mockAccount.password) {
-          this.$emit('authenticated', true);
-          this.$router.replace({ name: 'secure' });
+    checkCapsLock() {
+      console.log('caps metod');
+      const input = document.getElementById('username');
+
+      input.addEventListener('keyup', (event) => {
+        if (event.getModifierState('CapsLock')) {
+          this.caps = true;
         } else {
-          console.log('The username and / or password is incorrect');
+          this.caps = false;
         }
+      });
+    },
+    login() {
+      console.log('begin');
+      if (this.username !== '' && this.password !== '') {
+        this.passInput = true;
+        this.userInput = true;
       } else {
-        console.log('A username and password must be present');
+        console.log('no input begin');
+        if (this.username === '') {
+          console.log('no usernamelogin');
+          this.userInput = false;
+        } else {
+          this.userInput = true;
+        }
+
+        if (this.password === '') {
+          console.log('no passwordlogin');
+          this.passInput = false;
+        } else {
+          this.passInput = true;
+        }
       }
     },
   },
@@ -70,6 +103,9 @@ export default {
 .button-positioning {
   right: 8%;
   display: block;
+}
+h3 {
+  margin-top: 170px;
 }
 
 </style>
