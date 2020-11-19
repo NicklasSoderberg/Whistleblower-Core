@@ -5,6 +5,8 @@ import HomePage from '../components/HomePage.vue';
 import Create from '../components/Create.vue';
 import FollowUp from '../components/FollowUp.vue';
 import Login from '../components/LoginPage.vue';
+import WhistleHandler from '../components/WhistleHandler.vue';
+import WhistleSelect from '../components/WhistleSelect.vue';
 
 Vue.use(Router);
 
@@ -33,5 +35,15 @@ export default new Router({
     path: '/HomePage',
     name: 'HomePage',
     component: HomePage,
+  },
+  {
+    path: '/WhistleHandler',
+    name: 'WhistleHandler',
+    component: WhistleHandler,
+  },
+  {
+    path: '/WhistleSelect',
+    name: 'WhistleSelect',
+    component: WhistleSelect,
   }],
 });
