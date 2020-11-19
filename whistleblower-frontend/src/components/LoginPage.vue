@@ -2,7 +2,7 @@
 
 <body >
   <div class="grid">
-          <h3>Ange användarnamn och lösenord för att logga in</h3>
+          <h3 id="titlepos">Ange användarnamn och lösenord för att logga in</h3>
      <vs-row  justify="center" style="margin-bottom: 5px">
        <div justify="left" align="left">
         <vs-input :state="stateUser" v-model="username" :placeholder="userPlaceholder">
@@ -102,7 +102,7 @@ export default {
   right: 8%;
   display: block;
 }
-h3 {
+#titlepos {
   margin-top: 170px;
 }
 

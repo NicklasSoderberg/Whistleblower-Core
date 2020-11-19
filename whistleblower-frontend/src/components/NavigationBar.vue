@@ -1,11 +1,11 @@
 <template>
     <div>
-      <vs-navbar center-collapsed shadow centerCollapsed v-model="active">
+      <vs-navbar leftCollapsed shadow v-model="active">
         <template #left>
           <a onclick="window.open('http://www.omegapoint.se', '_blank')">
           <img src="../assets/omegapoint.png" alt="" height="40" width="95">
           </a>
-          <p id="NameBatch" v-if="Role == 'lawyer'">
+          <p v-if="Role == 'lawyer'">
             Inloggad: Sven
           </p>
         </template>
@@ -43,17 +43,17 @@
           </vs-navbar-item>
         </template>
         <template v-else-if="Role == 'admin'">
-          <vs-navbar-item :active="active == 'Home'" id="Home"
-           v-on:click="RouteClick('/')">
+          <vs-navbar-item :active="active == 'Admin'" id="Admin"
+           v-on:click="RouteClick('/admin')">
             Ärende
           </vs-navbar-item>
-          <vs-navbar-item :active="active == 'CreateLawyer'" id="Lawyer"
-          v-on:click="RouteClick('/')">
-            Lägg till Advokat
+          <vs-navbar-item :active="active == 'Lawyer'" id="Lawyer"
+          v-on:click="RouteClick('/newlawyer')">
+            Advokater
           </vs-navbar-item>
-          <vs-navbar-item :active="active == 'CreateSubject'" id="Subject"
-          v-on:click="RouteClick('/')">
-            Lägg till ämne
+          <vs-navbar-item :active="active == 'Subject'" id="Subject"
+          v-on:click="RouteClick('/newsubject')">
+            Ämnen
           </vs-navbar-item>
         </template>
         <template #right>
@@ -81,7 +81,5 @@ export default {
 </script>
 
 <style>
-  #NameBatch{
-    margin-left: 50px;
-  }
+
 </style>
