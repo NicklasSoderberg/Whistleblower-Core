@@ -95,9 +95,9 @@ export default {
     },
   },
 };
-</script>
+</script >
 
-<style>
+<style scoped>
 .button-positioning {
   right: 8%;
   display: block;

@@ -5,6 +5,7 @@ import HomePage from '../components/HomePage.vue';
 import Create from '../components/Create.vue';
 import FollowUp from '../components/FollowUp.vue';
 import Login from '../components/LoginPage.vue';
+import StatusPage from '../components/StatusPage.vue';
 
 Vue.use(Router);
 
@@ -33,5 +34,10 @@ export default new Router({
     path: '/HomePage',
     name: 'HomePage',
     component: HomePage,
+  },
+  {
+    path: '/Reportstatus',
+    name: 'StatusPage',
+    component: StatusPage,
   }],
 });
