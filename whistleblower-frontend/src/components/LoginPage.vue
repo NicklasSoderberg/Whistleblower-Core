@@ -14,7 +14,7 @@
 </vs-row>
 
 <vs-row justify="center" align="center">
-  <div justify="left" align="left">
+  <div justify="center" align="center">
        <vs-input :state="statePass" type="password"
         v-model="password" :placeholder="passPlaceholder">
           <template #icon>
@@ -25,13 +25,11 @@
         </template>
         </vs-input>
 
-        <vs-row>
+        <vs-row justify="center" align="center">
         <vs-button gradient primary @click="this.login">Logga in</vs-button>
         </vs-row>
   </div>
-
       </vs-row>
-
   </div>
 </body>
 </template>
