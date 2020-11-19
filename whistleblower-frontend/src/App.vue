@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <NavigationBar Role='admin'></NavigationBar>
+    <NavigationBar Role=''></NavigationBar>
     <main>
       <router-view/>
     </main>

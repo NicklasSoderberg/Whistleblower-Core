@@ -1,11 +1,15 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import HomePage from '../components/HomePage.vue';
-import Create from '../components/Create.vue';
-import FollowUp from '../components/FollowUp.vue';
-import Login from '../components/LoginPage.vue';
-import StatusPage from '../components/StatusPage.vue';
+// No-role
+import HomePage from '../components/norole/HomePage.vue';
+import Create from '../components/norole/Create.vue';
+import FollowUp from '../components/norole/FollowUp.vue';
+import Login from '../components/norole/LoginPage.vue';
+
+// User
+import StatusPage from '../components/user/StatusPage.vue';
+import SafepostBox from '../components/user/SafepostBox.vue';
 
 // Admin
 import HandleCasesPage from '../components/admin/HandleCasesPage.vue';
@@ -51,8 +55,13 @@ export default new Router({
     component: HandleSubjectsPage,
   },
   {
-    path: '/Reportstatus',
+    path: '/reportstatus',
     name: 'StatusPage',
     component: StatusPage,
+  },
+  {
+    path: '/safepostbox',
+    name: 'SafepostBox',
+    component: SafepostBox,
   }],
 });

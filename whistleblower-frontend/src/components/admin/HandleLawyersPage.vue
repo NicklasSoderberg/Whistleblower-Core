@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="hello" id="first">
     <vs-row type="flex" justify="center" align="center">
     <TableLawyer></TableLawyer>
     </vs-row>
@@ -40,7 +40,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.hello{
-  margin-top: 300px;
+#first{
+  margin-top: 50px;
 }
 </style>

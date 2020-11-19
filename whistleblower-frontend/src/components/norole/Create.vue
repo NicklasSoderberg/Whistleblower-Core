@@ -45,7 +45,9 @@
     </vs-row>
 
     <vs-dialog blur not-close v-model="active">
+      <vs-row type="flex" justify="center" align="center">
         <h2>Vill du skicka ärendet?</h2>
+      </vs-row>
         <div class="con-form">
           <h4>Du kan inte redigera ditt ärende förrens du fått svar från oss.</h4>
         </div>
