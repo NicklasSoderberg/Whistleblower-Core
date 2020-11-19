@@ -7,18 +7,31 @@
 </vs-row>
 
     <vs-row justify="center" align="center">
-    <div class="ex2">
-        <h3>Ärende status</h3>
-        <p> {{checkStatus}}</p>
-        <h3>Vad gäller ärendet?</h3>
-        <p>Mutor,korruption & förfalskning</p>
-        <h3>Detaljer om ärendet</h3>
-        <p>Andre tvättade pengar med företagets ekonomi
-        </p>
-        <h3>När inträffade händelsen?</h3>
-        <p>2020-05-16</p>
-        <h3>Vart inträffade händelsen</h3>
-        <p>Newton yrkeshögskola i Malmö</p>
+    <div class="form-body">
+        <div class="form-group" >
+            <h3>Ärende status</h3>
+            <p> {{checkStatus}}</p>
+        </div>
+
+        <div class="form-group" >
+            <h3>Vad gäller ärendet?</h3>
+            <p>Mutor,korruption & förfalskning</p>
+        </div>
+
+        <div class="form-group" >
+            <h3>Detaljer om ärendet</h3>
+            <p>Andre tvättade pengar med företagets ekonomi</p>
+        </div>
+
+        <div class="form-group" >
+            <h3>När inträffade händelsen?</h3>
+            <p>2020-05-16</p>
+        </div>
+
+        <div class="form-group" >
+            <h3>Vart inträffade händelsen</h3>
+            <p>Newton yrkeshögskola i Malmö</p>
+        </div>
     </div>
 </vs-row>
 </div>
@@ -46,10 +59,17 @@ div.ex1 {
 div.ex2 {
     text-align-last: center;
 }
-p {
-    margin-bottom: 40px;
-}
 h1 {
     margin-bottom: 40px;
+}
+.form-body {
+    display: table;
+    margin: auto;
+    width: auto;
+    box-sizing: border-box;
+}
+.form-group {
+    margin-bottom: 25px;
+    width: auto;
 }
 </style>
