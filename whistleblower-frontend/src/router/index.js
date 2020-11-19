@@ -5,6 +5,7 @@ import HomePage from '../components/HomePage.vue';
 import Create from '../components/Create.vue';
 import FollowUp from '../components/FollowUp.vue';
 import Login from '../components/LoginPage.vue';
+import StatusPage from '../components/StatusPage.vue';
 
 // Admin
 import HandleCasesPage from '../components/admin/HandleCasesPage.vue';
@@ -48,5 +49,10 @@ export default new Router({
     path: '/newsubject',
     name: 'AdminNewSubject',
     component: HandleSubjectsPage,
+  },
+  {
+    path: '/Reportstatus',
+    name: 'StatusPage',
+    component: StatusPage,
   }],
 });

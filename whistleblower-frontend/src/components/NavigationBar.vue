@@ -24,6 +24,17 @@
           </vs-navbar-item>
         </template>
         <template v-else-if="Role == 'user'">
+          <vs-navbar-item :active="active == 'Mitt ärende'" id="ReportStatus"
+           v-on:click="RouteClick('/Reportstatus')">
+            Mitt ärende
+          </vs-navbar-item>
+          <vs-navbar-item :active="active == 'Safepostbox'" id="SafePostBox"
+          v-on:click="RouteClick('FollowUp')" icon-after disabled>
+            SafePostBox
+
+            <i class='bx bxs-message' ></i>
+
+          </vs-navbar-item>
         </template>
         <template v-else-if="Role == 'lawyer'">
           <vs-navbar-item :active="active == 'Home'" id="Home"
@@ -46,7 +57,7 @@
           </vs-navbar-item>
         </template>
         <template #right>
-          <vs-button flat v-if="Role != ''" >Logout</vs-button>
+          <vs-button flat v-if="Role != ''" danger relief>Logout</vs-button>
           <vs-button flat v-else v-on:click="RouteClick('Login')">Login</vs-button>
         </template>
       </vs-navbar>
