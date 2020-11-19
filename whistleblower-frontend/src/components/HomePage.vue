@@ -1,16 +1,15 @@
 <template>
   <div>
-    <vs-row>
+    <vs-row justify='center'>
       <vs-col
-        w="4"
-        class="info-text"
-        offset="4"
+      lg='6'
+      sm='12'
       >
         <h2>
           Så här lämnar du ditt anonyma meddelande
         </h2>
 
-        <p style="margin-top: 30px;">
+        <p>
           Du behöver inte ha bevis för din misstanke, men alla meddelanden ska lämnas i god tro.<br>
 
           <br>Du rapporterar enkelt och tryggt genom att följa instruktionerna i formuläret.
@@ -21,7 +20,7 @@
           <br>Inom 10 dagar kan du läsa en eventuell följdfråga eller ett svar från oss.
         </p>
 
-        <h3 style="text-align:center">
+        <h3>
           Vi vill göra rätt
         </h3>
         <p>
@@ -30,7 +29,7 @@
           verksamhet. Du har en viktig roll för att vi ska lyckas.
         </p>
 
-        <h3 style="text-align:center">
+        <h3>
           Vår visselblåsartjänst
         </h3>
         <p>
@@ -47,7 +46,7 @@
           anonymt rapportera din farhåga.
         </p>
 
-        <h3 style="text-align:center">
+        <h3>
           När kan jag använda visselblåsartjänsten?
         </h3>
         <p>
@@ -56,7 +55,7 @@
           påverka vår organisation eller en människas liv eller hälsa.
         </p>
 
-        <h3 style="text-align:center">
+        <h3>
           Så här hanteras ditt meddelande
         </h3>
         <p>
@@ -84,9 +83,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
 ul {
   list-style-type: none;
   padding: 0;
@@ -97,5 +93,12 @@ li {
 }
 a {
   color: #42b983;
+}
+h2 {
+    text-align: center;
+}
+h3 {
+    text-align: center;
+    margin-top: 50px;
 }
 </style>

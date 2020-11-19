@@ -6,6 +6,11 @@ import Create from '../components/Create.vue';
 import FollowUp from '../components/FollowUp.vue';
 import Login from '../components/LoginPage.vue';
 
+// Admin
+import HandleCasesPage from '../components/admin/HandleCasesPage.vue';
+import HandleLawyersPage from '../components/admin/HandleLawyersPage.vue';
+import HandleSubjectsPage from '../components/admin/HandleSubjectsPage.vue';
+
 Vue.use(Router);
 
 export default new Router({
@@ -30,8 +35,18 @@ export default new Router({
     component: Login,
   },
   {
-    path: '/HomePage',
-    name: 'HomePage',
-    component: HomePage,
+    path: '/admin',
+    name: 'AdminPage',
+    component: HandleCasesPage,
+  },
+  {
+    path: '/newlawyer',
+    name: 'AdminNewLawyer',
+    component: HandleLawyersPage,
+  },
+  {
+    path: '/newsubject',
+    name: 'AdminNewSubject',
+    component: HandleSubjectsPage,
   }],
 });
