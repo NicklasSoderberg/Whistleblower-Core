@@ -14,7 +14,7 @@
         Lägg till advokat
       </h3>
       </vs-row>
-      <DialogAddLawyer></DialogAddLawyer>
+      <DialogAddLawyer id="firstItem"></DialogAddLawyer>
       <vs-row type="flex" justify="center" align="center">
          <vs-button flat @click="active=!active">Avbryt</vs-button>
          <vs-button gradient primary @click="active=!active">
@@ -40,4 +40,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.hello{
+  margin-top: 300px;
+}
 </style>
