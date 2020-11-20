@@ -54,7 +54,7 @@
         <vs-row type="flex" justify="center" align="center">
          <vs-button flat @click="active=!active">Avbryt</vs-button>
          <vs-button gradient primary @click="active=!active">
-           <i class="bx bxs-user-plus"></i>Delete</vs-button>
+           <i class="bx bxs-user-plus"></i>Ta bort</vs-button>
         </vs-row>
       </vs-dialog>
     </div>
