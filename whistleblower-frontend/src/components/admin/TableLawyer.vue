@@ -50,21 +50,21 @@
         </template>
       </vs-table>
       <vs-dialog blur not-close v-model="active">
-        <DialogDeleteLawyer :LawyerName=selected.name></DialogDeleteLawyer>
+        <DialogDelete :Name=selected.name></DialogDelete>
         <vs-row type="flex" justify="center" align="center">
          <vs-button flat @click="active=!active">Avbryt</vs-button>
          <vs-button gradient primary @click="active=!active">
-           <i class="bx bxs-user-plus"></i>Delete</vs-button>
+           <i class="bx bxs-user-plus"></i>Ta bort</vs-button>
         </vs-row>
       </vs-dialog>
     </div>
 </template>
 
 <script>
-import DialogDeleteLawyer from './DialogDeleteLawyer.vue';
+import DialogDelete from './DialogDelete.vue';
 
 export default {
-  components: { DialogDeleteLawyer },
+  components: { DialogDelete },
   name: 'TableLawyer',
   data: () => ({
     selected: { name: '' },
