@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <h3>
-      Är du säker du vill ta bort {{LawyerName}} från advokatlistan?
+      Är du säker du vill ta bort {{Name}}?
     </h3>
   </div>
 </template>
@@ -13,7 +13,7 @@ export default {
   data: () => ({
   }),
   props: {
-    LawyerName: String,
+    Name: String,
   },
 };
 </script>
