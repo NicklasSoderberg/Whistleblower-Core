@@ -4,37 +4,50 @@
       <vs-row type="flex" justify="center" align="center">
       <label id="top">Vad gäller ärendet?</label>
       </vs-row>
+      <vs-row type="flex" justify="center" align="center">
       <select>
         <option></option>
         <option>Bedrägeri</option>
         <option>Penningtvätt</option>
       </select>
+      </vs-row>
       <vs-row type="flex" justify="center" align="center">
       <label>När inträffa händelsen?</label>
       </vs-row>
+      <vs-row type="flex" justify="center" align="center">
       <textarea name="" id="" cols="100" rows="7" placeholder=""></textarea>
+      </vs-row>
 
       <vs-row type="flex" justify="center" align="center">
       <label>Vart inträffade händelsen?</label>
       </vs-row>
+      <vs-row type="flex" justify="center" align="center">
       <textarea name="" id="" cols="100" rows="7" placeholder=""></textarea>
+      </vs-row>
 
       <vs-row type="flex" justify="center" align="center">
       <label>Detailjer om ärendet?</label>
       </vs-row>
+      <vs-row type="flex" justify="center" align="center">
       <textarea name="" id="" cols="100" rows="7" placeholder=""></textarea>
+      </vs-row>
 
       <vs-row type="flex" justify="center" align="center">
       <label>Är andra anställda medvetna om detta?</label>
       </vs-row>
+      <vs-row type="flex" justify="center" align="center">
       <textarea name="" id="" cols="100" rows="7" placeholder=""></textarea>
+      </vs-row>
+
     </div>
     <vs-row type="flex" justify="center" align="center">
     <vs-button flat @click="active=!active">Nästa</vs-button>
     </vs-row>
 
-    <vs-dialog blur="true" not-close="true" v-model="active">
+    <vs-dialog blur not-close v-model="active">
+      <vs-row type="flex" justify="center" align="center">
         <h2>Vill du skicka ärendet?</h2>
+      </vs-row>
         <div class="con-form">
           <h4>Du kan inte redigera ditt ärende förrens du fått svar från oss.</h4>
         </div>
@@ -43,7 +56,6 @@
          <vs-button gradient primary @click="active=!active">Skicka ärende</vs-button>
       </vs-row>
       </vs-dialog>
-
   </div>
 </template>
 

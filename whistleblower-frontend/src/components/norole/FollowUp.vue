@@ -1,6 +1,8 @@
 <template>
   <div class="center content-inputs wrapper">
+      <vs-row id="space" type="flex" justify="center" align="center">
       <h3>Ange Ärende ID och lösenord för att följa ditt ärende</h3>
+      </vs-row>
       <vs-row id="space" type="flex" justify="center" align="center">
       <vs-input v-model="value1" placeholder="Ärende ID">
       </vs-input>

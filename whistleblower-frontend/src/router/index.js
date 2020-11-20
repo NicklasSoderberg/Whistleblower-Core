@@ -1,12 +1,22 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import HomePage from '../components/HomePage.vue';
-import Create from '../components/Create.vue';
-import FollowUp from '../components/FollowUp.vue';
-import Login from '../components/LoginPage.vue';
+// No-role
+import HomePage from '../components/norole/HomePage.vue';
+import Create from '../components/norole/Create.vue';
+import FollowUp from '../components/norole/FollowUp.vue';
+import Login from '../components/norole/LoginPage.vue';
 import WhistleHandler from '../components/WhistleHandler.vue';
 import WhistleSelect from '../components/WhistleSelect.vue';
+
+// User
+import StatusPage from '../components/user/StatusPage.vue';
+import SafepostBox from '../components/user/SafepostBox.vue';
+
+// Admin
+import HandleCasesPage from '../components/admin/HandleCasesPage.vue';
+import HandleLawyersPage from '../components/admin/HandleLawyersPage.vue';
+import HandleSubjectsPage from '../components/admin/HandleSubjectsPage.vue';
 
 Vue.use(Router);
 
@@ -32,6 +42,29 @@ export default new Router({
     component: Login,
   },
   {
+    path: '/admin',
+    name: 'AdminPage',
+    component: HandleCasesPage,
+  },
+  {
+    path: '/newlawyer',
+    name: 'AdminNewLawyer',
+    component: HandleLawyersPage,
+  },
+  {
+    path: '/newsubject',
+    name: 'AdminNewSubject',
+    component: HandleSubjectsPage,
+  },
+  {
+    path: '/reportstatus',
+    name: 'StatusPage',
+    component: StatusPage,
+  },
+  {
+    path: '/safepostbox',
+    name: 'SafepostBox',
+    component: SafepostBox,
     path: '/HomePage',
     name: 'HomePage',
     component: HomePage,
