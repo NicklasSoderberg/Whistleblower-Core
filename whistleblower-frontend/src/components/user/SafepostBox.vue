@@ -4,50 +4,38 @@
       Välkommen till SafepostBox
     </h1>
 <section ref="chatArea" class="chat-area">
-  <vs-row>
-<vs-avatar circle size="30">
-        <template #text>
-          L
-        </template>
-</vs-avatar>
-    <p class="message message-in">
-      Kan du förklara mer om ditt ärende.
-      Kan du förklara mer om ditt ärende.
-      Kan du förklara mer om ditt ärende.
-      Kan du förklara mer om ditt ärende.
-      Kan du förklara mer om ditt ärende.
-      Kan du förklara mer om ditt ärende.
-    </p>
-  </vs-row>
-
-<vs-row>
-
-  <vs-avatar circle size="20" style="margin-left: 90%" class="avatar">
-        <template #text>
-          W
-        </template>
-</vs-avatar>
-
-  <p class="message message-out">
-      Absolut klockan var 10.
+<p v-for="message in messages"
+:key="message.author" class="message"
+:class="{ 'message-out': message.author === 'you', 'message-in': message.author !== 'you' }">
+      {{ message.body }}
     </p>
 
-</vs-row>
-
-<vs-row>
-
-  <vs-avatar circle size="20" style="margin-left: 90%" class="avatar">
-        <template #text>
-          W
-        </template>
-</vs-avatar>
-
-  <p class="message message-out">
-      eller klockan var 5.
-    </p>
-
-</vs-row>
   </section>
+
+  <vs-dialog blur prevent-close v-model="active">
+    <template #header>
+          <h3 class="not-margin">
+            meddelande till juristen.
+          </h3>
+        </template>
+      <form @submit.prevent="sendMessage('out')" id="person2-form"
+      style="width: 100%; height: 200px;">
+      <textarea v-model="youMessage" id="person2-input" type="text" placeholder="Type your message">
+
+      </textarea>
+<vs-button type="submit" gradient primary @click="active=!active &&
+ disableButton === true">Skicka meddelande</vs-button>
+    </form>
+      </vs-dialog>
+      <div justify="center" align="center">
+    <vs-button
+        primary
+        @click="active=!active"
+        class="btn"
+      >
+        Svara
+      </vs-button>
+  </div>
   </body>
 </template>
 
@@ -56,6 +44,8 @@
 export default {
   name: 'SafepostBox',
   data: () => ({
+    active: false,
+    disableButton: true,
     bobMessage: '',
     youMessage: '',
     messages: [
@@ -74,10 +64,28 @@ export default {
     ],
   }),
   computed: {
-
+    canSendMsg() {
+      return this.disableButton ? 'disabled' : '';
+    },
   },
   methods: {
-
+    sendMessage(direction) {
+      if (!this.youMessage && !this.bobMessage) {
+        return;
+      }
+      if (direction === 'out') {
+        this.messages.push({ body: this.youMessage, author: 'you' });
+        this.youMessage = '';
+      } else if (direction === 'in') {
+        this.messages.push({ body: this.bobMessage, author: 'bob' });
+        this.bobMessage = '';
+      } else {
+        alert('something went wrong');
+      }
+    },
+    clearAllMessages() {
+      this.messages = [];
+    },
   },
 };
 </script>
@@ -91,7 +99,28 @@ height: 100%;
   font-weight: 100;
 margin: 0px;
 }
-
+textarea {
+  resize: none;
+  font-family:"Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  -webkit-border-radius: 5px;
+    -moz-border-radius: 1px;
+    border-radius: 6px;
+    width: 95%;
+    height: 80%;
+    outline: none;
+    background-color: transparent;
+}
+.btn {
+position: relative;
+bottom: 20px;
+max-width: 520px;
+width: 250px;
+}
+.reply-button {
+height: 40px;
+width: 90px;
+}
 .headline {
   text-align: center;
   font-weight: 100;
@@ -103,7 +132,7 @@ margin: 0px;
   height: 50vh;
   padding: 1em;
   overflow: auto;
-  max-width: 350px;
+  max-width: 500px;
   margin: 0 auto 2em auto;
   box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
   border-radius: 5%;
@@ -112,22 +141,25 @@ margin: 0px;
   position: absolute;
   bottom: 42px;
   left: 10px;
+  color: #6e6464;
 }
 .message {
-  width: 45%;
   border-radius: 10px;
   padding: .5em;
 /*   margin-bottom: .5em; */
-  font-size: .8em;
 }
 .message-out {
   background: #407FFF;
   color: white;
   margin-left: 50%;
+  word-wrap: break-word;
+  justify-content: right;
 }
 .message-in {
   background: #F1F0F0;
   color: black;
+  word-wrap: break-word;
+    width: 45%;
 }
 .chat-inputs {
   display: flex;
