@@ -36,7 +36,7 @@
         </template>
         <template v-else-if="setRole == 'lawyer'">
           <vs-navbar-item :active="active == 'Home'" id="Home"
-           v-on:click="RouteClick('/')">
+           v-on:click="RouteClick('/WhistleHandler')">
             Mina ärende
           </vs-navbar-item>
         </template>

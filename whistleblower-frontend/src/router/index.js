@@ -6,8 +6,7 @@ import HomePage from '../components/norole/HomePage.vue';
 import Create from '../components/norole/Create.vue';
 import FollowUp from '../components/norole/FollowUp.vue';
 import Login from '../components/norole/LoginPage.vue';
-import WhistleHandler from '../components/WhistleHandler.vue';
-import WhistleSelect from '../components/WhistleSelect.vue';
+import WhistleHandler from '../components/Lawyer/WhistleHandler.vue';
 
 // User
 import StatusPage from '../components/user/StatusPage.vue';
@@ -65,18 +64,10 @@ export default new Router({
     path: '/safepostbox',
     name: 'SafepostBox',
     component: SafepostBox,
-    path: '/HomePage',
-    name: 'HomePage',
-    component: HomePage,
   },
   {
     path: '/WhistleHandler',
     name: 'WhistleHandler',
     component: WhistleHandler,
-  },
-  {
-    path: '/WhistleSelect',
-    name: 'WhistleSelect',
-    component: WhistleSelect,
   }],
 });
