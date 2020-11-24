@@ -42,16 +42,16 @@
               </p>
             </vs-td>
             <vs-td>
-           <div v-if="tr.status == 'Aktiv'"
-           style="background-color:green; width:80%; border-radius:5%;">
+           <div class="statusrow" v-if="tr.status == 'Aktiv'"
+           style="background-color:green; ">
            <h3 style="text-align:center; color:white;">Aktiv</h3>
            </div>
-       <div v-else-if="tr.status == 'Hanteras'"
-           style="background-color:orange; width:80%; border-radius:5%;">
+       <div class="statusrow" v-else-if="tr.status == 'Hanteras'"
+           style="background-color:orange; ">
            <h3 style="text-align:center; color:white;">Hanteras</h3>
            </div>
-       <div v-else-if="tr.status == 'Avslutad'"
-           style="background-color:red; width:80%; border-radius:5%;">
+       <div class="statusrow" v-else-if="tr.status == 'Avslutad'"
+           style="background-color:red;">
            <h3 style="text-align:center; color:white;">Avslutad</h3>
            </div>
             </vs-td>
@@ -198,5 +198,12 @@ export default {
   #columntable {
     width: 50%;
 }
+}
+.statusrow{
+  width:60%;
+  height: 20%;
+  border-radius:5%;
+  border-style:solid;
+  border-width: 2px;;
 }
 </style>

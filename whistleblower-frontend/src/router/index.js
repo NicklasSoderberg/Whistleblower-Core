@@ -17,7 +17,7 @@ import HandleLawyersPage from '../components/admin/HandleLawyersPage.vue';
 import HandleSubjectsPage from '../components/admin/HandleSubjectsPage.vue';
 
 // Lawyer
-import WhistleHandler from '../components/Lawyer/WhistleHandler.vue';
+import WhistleHandlerPage from '../components/lawyer/WhistleHandler.vue';
 
 Vue.use(Router);
 
@@ -70,6 +70,6 @@ export default new Router({
   {
     path: '/whistleHandler',
     name: 'WhistleHandler',
-    component: WhistleHandler,
+    component: WhistleHandlerPage,
   }],
 });
