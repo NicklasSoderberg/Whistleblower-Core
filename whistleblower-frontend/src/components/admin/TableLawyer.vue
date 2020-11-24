@@ -35,7 +35,7 @@
             </vs-td>
             <template #expand>
               <vs-row align="flex" justify="center">
-              <vs-button>
+              <vs-button @click="active2 =! active2">
                 <i class="bx bxs-edit"></i>Redigera
               </vs-button>
               <vs-button danger @click="active=!active">
@@ -57,18 +57,29 @@
            <i class="bx bxs-user-plus"></i>Ta bort</vs-button>
         </vs-row>
       </vs-dialog>
+      <vs-dialog blur not-close v-model="active2">
+        <DialogEdit :Name=selected.name :Email=selected.email
+        :pNumber=selected.phonenumber></DialogEdit>
+        <vs-row type="flex" justify="center" align="center">
+        <vs-button flat @click="active2=!active2">Avbryt</vs-button>
+         <vs-button gradient primary @click="active2=!active2">
+           <i class="bx bxs-save"></i>Spara</vs-button>
+        </vs-row>
+      </vs-dialog>
     </div>
 </template>
 
 <script>
 import DialogDelete from './DialogDelete.vue';
+import DialogEdit from './DialogEditLawyer.vue';
 
 export default {
-  components: { DialogDelete },
+  components: { DialogDelete, DialogEdit },
   name: 'TableLawyer',
   data: () => ({
     selected: { name: '' },
     active: false,
+    active2: false,
     search: '',
     page: 1,
     max: 10,
