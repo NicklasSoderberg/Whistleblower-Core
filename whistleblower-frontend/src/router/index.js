@@ -17,7 +17,7 @@ import HandleLawyersPage from '../components/admin/HandleLawyersPage.vue';
 import HandleSubjectsPage from '../components/admin/HandleSubjectsPage.vue';
 
 // Lawyer
-import WhistleHandler from '../components/lawyer/WhistleHandler.vue';
+import WhistleHandler from '../components/Lawyer/WhistleHandler.vue';
 
 Vue.use(Router);
 
