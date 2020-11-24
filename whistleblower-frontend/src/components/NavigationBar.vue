@@ -31,7 +31,7 @@
           <vs-navbar-item :active="active == 'SafePostBox'" id="SafePostBox"
           v-on:click="RouteClick('SafepostBox')" icon-after>
             SafePostBox
-            <i class='bx bxs-message' ></i>
+            <i :class='checkMessages' ></i>
           </vs-navbar-item>
         </template>
         <template v-else-if="setRole == 'lawyer'">
@@ -72,10 +72,23 @@ export default {
   data: () => ({
     active: 'Home',
     setRole: '',
+    newMessage: true,
   }),
+  created() {
+    this.bus.$emit(this.userLastCount);
+    console.log('test');
+  },
   methods: {
     RouteClick(route) {
       this.$router.push(route);
+    },
+    emitNewMsg() {
+      this.$root.$emit('userLastCount'); // like this
+    },
+  },
+  computed: {
+    checkMessages() {
+      return this.newMessage ? 'bx bxs-bell-ring msgicon' : 'bx bx-bell msgicon';
     },
   },
   props: {
@@ -86,5 +99,7 @@ export default {
 </script>
 
 <style>
-
+.msgicon {
+  color: rgb(212, 52, 52)
+}
 </style>

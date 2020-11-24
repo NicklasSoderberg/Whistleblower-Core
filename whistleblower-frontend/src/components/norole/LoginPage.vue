@@ -104,6 +104,7 @@ export default {
 }
 #titlepos {
   margin-top: 170px;
+  text-align: center;
 }
 
 </style>
