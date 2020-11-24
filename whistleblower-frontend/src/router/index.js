@@ -16,6 +16,9 @@ import HandleCasesPage from '../components/admin/HandleCasesPage.vue';
 import HandleLawyersPage from '../components/admin/HandleLawyersPage.vue';
 import HandleSubjectsPage from '../components/admin/HandleSubjectsPage.vue';
 
+// Lawyer
+import WhistleHandlerPage from '../components/lawyer/WhistleHandler.vue';
+
 Vue.use(Router);
 
 export default new Router({
@@ -63,5 +66,10 @@ export default new Router({
     path: '/safepostbox',
     name: 'SafepostBox',
     component: SafepostBox,
+  },
+  {
+    path: '/whistleHandler',
+    name: 'WhistleHandler',
+    component: WhistleHandlerPage,
   }],
 });

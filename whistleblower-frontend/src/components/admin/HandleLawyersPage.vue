@@ -1,6 +1,11 @@
 <template>
   <div class="hello" id="first">
     <vs-row type="flex" justify="center" align="center">
+    <h3>
+      Advokater
+    </h3>
+    </vs-row>
+    <vs-row type="flex" justify="center" align="center">
     <TableLawyer></TableLawyer>
     </vs-row>
     <vs-row type="flex" justify="center" align="center">
