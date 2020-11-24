@@ -5,7 +5,7 @@
     </h1>
 <section ref="chatArea" class="chat-area">
 <p v-for="message in messages"
-:key="message.author" class="message"
+:key="message.name" class="message"
 :class="{ 'message-out': message.author === 'you', 'message-in': message.author !== 'you' }">
       {{ message.body }}
     </p>
@@ -48,6 +48,7 @@ export default {
     disableButton: true,
     bobMessage: '',
     youMessage: '',
+    newMessage: false,
     messages: [
       {
         body: 'Lawyer test inc message',
@@ -63,11 +64,16 @@ export default {
       },
     ],
   }),
+  created() {
+    // this.interval = setInterval(() => this.userLastCount(), 1000);
+    // Todo call this method in another compontent
+  },
   computed: {
     canSendMsg() {
       return this.disableButton ? 'disabled' : '';
     },
   },
+
   methods: {
     sendMessage(direction) {
       if (!this.youMessage && !this.bobMessage) {
@@ -79,12 +85,22 @@ export default {
       } else if (direction === 'in') {
         this.messages.push({ body: this.bobMessage, author: 'bob' });
         this.bobMessage = '';
-      } else {
-        alert('something went wrong');
       }
     },
     clearAllMessages() {
       this.messages = [];
+    },
+    userLastCount() {
+      const i = this.messages.length - 1;
+      const lastMsg = this.messages[i];
+      if (lastMsg.author !== 'you') {
+        this.newMessage = true;
+        console.log('userlastcount true');
+        return true;
+      }
+      console.log('userlastcount false');
+      this.newMessage = false;
+      return false;
     },
   },
 };
@@ -136,6 +152,7 @@ width: 90px;
   margin: 0 auto 2em auto;
   box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
   border-radius: 5%;
+  margin-top: 5%;
 }
 .avatar {
   position: absolute;
