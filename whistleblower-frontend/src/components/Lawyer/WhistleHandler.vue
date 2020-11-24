@@ -3,7 +3,7 @@
     <vs-row
           justify="center"
           align="center">
-     <vs-col w="6">
+     <vs-col id="columntable">
       <vs-table
       id="table"
         v-model="selected"
@@ -31,8 +31,8 @@
         </template>
         <template #tbody>
           <vs-tr
-            :key="tr.Id"
-            v-for="tr in users"
+            :key="i"
+            v-for="(tr, i) in $vs.getPage($vs.getSearch(users, search), page, max)"
             :data="tr"
             :is-selected="selected == tr"
           >
@@ -42,21 +42,18 @@
               </p>
             </vs-td>
             <vs-td>
-                 <vs-button success size="mini" v-if="tr.status == 'Aktiv'">
-        <p >
-          {{tr.status}}
-        </p>
-      </vs-button>
-       <vs-button warn size="mini" v-else-if="tr.status == 'Hanteras'">
-           <p>
-          {{tr.status}}
-        </p>
-       </vs-button>
-       <vs-button danger size="mini" v-else-if="tr.status == 'Avslutad'">
-            <p>
-          {{tr.status}}
-        </p>
-       </vs-button>
+           <div v-if="tr.status == 'Aktiv'"
+           style="background-color:green; width:80%; border-radius:5%;">
+           <h3 style="text-align:center; color:white;">Aktiv</h3>
+           </div>
+       <div v-else-if="tr.status == 'Hanteras'"
+           style="background-color:orange; width:80%; border-radius:5%;">
+           <h3 style="text-align:center; color:white;">Hanteras</h3>
+           </div>
+       <div v-else-if="tr.status == 'Avslutad'"
+           style="background-color:red; width:80%; border-radius:5%;">
+           <h3 style="text-align:center; color:white;">Avslutad</h3>
+           </div>
             </vs-td>
             <vs-td>
                 <p style="float:left;">
@@ -187,3 +184,19 @@ export default {
   },
 };
 </script>
+<style>
+.W100{
+  width: 100%;
+}
+@media (max-width: 900px){
+#columntable {
+    width: 100%;
+}
+}
+@media(min-width: 901px)
+{
+  #columntable {
+    width: 50%;
+}
+}
+</style>
