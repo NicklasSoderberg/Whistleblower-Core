@@ -5,7 +5,7 @@
       <label id="top">Vad gäller ärendet?</label>
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
-      <select>
+      <select style="outline: none;">
         <option></option>
         <option>Bedrägeri</option>
         <option>Penningtvätt</option>
@@ -15,14 +15,14 @@
       <label>När inträffa händelsen?</label>
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
-      <textarea name="" id="" cols="50" rows="2" placeholder=""></textarea>
+      <textarea name="" id="" cols="100" rows="7" placeholder=""></textarea>
       </vs-row>
 
       <vs-row type="flex" justify="center" align="center">
       <label>Vart inträffade händelsen?</label>
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
-      <textarea name="" id="" cols="50" rows="3" placeholder=""></textarea>
+      <textarea name="" id="" cols="100" rows="7" placeholder=""></textarea>
       </vs-row>
 
       <vs-row type="flex" justify="center" align="center">
