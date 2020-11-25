@@ -28,6 +28,7 @@
            v-on:click="RouteClick('Reportstatus')">
             Mitt ärende
           </vs-navbar-item>
+
           <vs-navbar-item :active="active == 'SafePostBox'" id="SafePostBox"
           v-on:click="RouteClick('SafepostBox')" icon-after>
             SafePostBox
@@ -75,11 +76,12 @@ export default {
     newMessage: true,
   }),
   created() {
-    this.bus.$emit(this.userLastCount);
-    console.log('test');
   },
   methods: {
     RouteClick(route) {
+      if (route === 'SafepostBox') {
+        this.newMessage = false;
+      }
       this.$router.push(route);
     },
     emitNewMsg() {

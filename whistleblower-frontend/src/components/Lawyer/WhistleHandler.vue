@@ -185,6 +185,9 @@ export default {
 };
 </script>
 <style>
+h3 {
+  font-size: 11px;
+}
 .W100{
   width: 100%;
 }
@@ -200,10 +203,9 @@ export default {
 }
 }
 .statusrow{
-  width:60%;
-  height: 20%;
-  border-radius:5%;
+  width:100%;
+  border-radius:4%;
   border-style:solid;
-  border-width: 2px;;
+  border-width: 1px;
 }
 </style>
