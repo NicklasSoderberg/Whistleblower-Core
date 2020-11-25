@@ -20,8 +20,8 @@
           <template #icon>
             <i class='bx bx-lock-open-alt'></i>
           </template>
-          <template #message-danger v-if="false">
-            <p>Capslock är på</p>
+          <template #message-danger v-if="wrongLogin">
+            <p>ID och lösenord stämmer inte.</p>
         </template>
         </vs-input>
 
@@ -43,6 +43,7 @@ export default {
     userInput: true,
     passInput: true,
     caps: false,
+    wrongLogin: false,
   }),
   computed: {
     stateUser() {
@@ -76,12 +77,18 @@ export default {
       if (this.username !== '' && this.password !== '') {
         this.passInput = true;
         this.userInput = true;
+        if (this.username === 'WhistleMock' && this.password === 'Test123') {
+          this.$router.push('ReportStatus');
+        } else {
+          this.wrongLogin = true;
+        }
       } else {
         console.log('no input begin');
         if (this.username === '') {
           console.log('no usernamelogin');
           this.userInput = false;
         } else {
+          this.wrongLogin = false;
           this.userInput = true;
         }
 
@@ -89,6 +96,7 @@ export default {
           console.log('no passwordlogin');
           this.passInput = false;
         } else {
+          this.wrongLogin = false;
           this.passInput = true;
         }
       }

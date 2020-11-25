@@ -32,6 +32,7 @@
         primary
         @click="active=!active"
         class="btn"
+        :disabled="disableButton"
       >
         Svara
       </vs-button>
@@ -45,28 +46,29 @@ export default {
   name: 'SafepostBox',
   data: () => ({
     active: false,
-    disableButton: true,
+    disableButton: false,
     bobMessage: '',
     youMessage: '',
     newMessage: false,
     messages: [
       {
-        body: 'Lawyer test inc message',
+        body: 'Har du någon slags konkret bevis att Andre tvättar pengar?',
         author: 'lawyer',
       },
       {
-        body: 'user test inc message',
+        body: 'Ja jag har papper och dokument som bevisar det.',
         author: 'you',
       },
       {
-        body: 'You\'re most welcome',
-        author: 'bob',
+        body: 'Vill du bifoga filerna och skicka dom.',
+        author: 'lawyer',
       },
     ],
   }),
   created() {
     // this.interval = setInterval(() => this.userLastCount(), 1000);
     // Todo call this method in another compontent
+    this.answerDisable();
   },
   computed: {
     canSendMsg() {
@@ -75,6 +77,7 @@ export default {
   },
 
   methods: {
+
     sendMessage(direction) {
       if (!this.youMessage && !this.bobMessage) {
         return;
@@ -82,25 +85,22 @@ export default {
       if (direction === 'out') {
         this.messages.push({ body: this.youMessage, author: 'you' });
         this.youMessage = '';
+        this.answerDisable();
       } else if (direction === 'in') {
         this.messages.push({ body: this.bobMessage, author: 'bob' });
         this.bobMessage = '';
       }
     },
-    clearAllMessages() {
-      this.messages = [];
-    },
-    userLastCount() {
+    answerDisable() {
       const i = this.messages.length - 1;
       const lastMsg = this.messages[i];
-      if (lastMsg.author !== 'you') {
-        this.newMessage = true;
+      if (lastMsg.author === 'you') {
+        this.disableButton = true;
         console.log('userlastcount true');
-        return true;
+      } else {
+        console.log('userlastcount false');
+        this.disableButton = false;
       }
-      console.log('userlastcount false');
-      this.newMessage = false;
-      return false;
     },
   },
 };
