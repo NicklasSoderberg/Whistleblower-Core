@@ -61,6 +61,12 @@
             <option>user</option>
             <option>lawyer</option>
           </select>
+          <span v-if="isLoggedIn">
+            <p>Auth: Logged in</p>
+          </span>
+          <span v-else>
+            <p>Auth: Not logged in</p>
+          </span>
           <vs-button flat v-if="setRole != ''" danger relief>Logout</vs-button>
           <vs-button flat v-else v-on:click="RouteClick('Login')">Login</vs-button>
         </template>
@@ -73,9 +79,16 @@ export default {
     active: 'Home',
     setRole: '',
   }),
+  computed: {
+    isLoggedIn() { return this.$store.getters.isAuthenticated; },
+  },
   methods: {
     RouteClick(route) {
       this.$router.push(route);
+    },
+    async logout() {
+      await this.$store.dispatch('LogOut');
+      this.$router.push('/Login');
     },
   },
   props: {
