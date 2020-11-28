@@ -78,7 +78,7 @@ const routes = [{
 {
   path: '/whistleHandler',
   name: 'WhistleHandler',
-  component: WhistleHandler,
+  component: WhistleHandlerPage,
   meta: { requiresAuth: true },
 }];
 

@@ -50,6 +50,7 @@ export default {
       userInput: true,
       passInput: true,
       caps: false,
+      wrongLogin: false,
     };
   },
   computed: {
@@ -74,7 +75,19 @@ export default {
       User.password = this.form.password;
       try {
         await this.LogIn(User);
-        this.$router.push('Admin');
+        switch (this.$store.getters.StateUserRole) {
+          case 'Admin':
+            this.$router.push('admin');
+            break;
+          case 'Lawyer':
+            this.$router.push('reportstatus');
+            break;
+          case 'User':
+            this.$router.push('WhistleHandler');
+            break;
+          default:
+            break;
+        }
         this.showError = false;
       } catch (error) {
         this.showError = true;
