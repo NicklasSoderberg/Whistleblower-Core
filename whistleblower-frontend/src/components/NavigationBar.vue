@@ -96,12 +96,14 @@
     </vs-navbar>
   </div>
 </template>
+
 <script>
 import { mapActions } from 'vuex';
 
 export default {
   data: () => ({
     active: 'Home',
+    newMessage: true,
   }),
   computed: {
     isLoggedIn() {
@@ -110,9 +112,15 @@ export default {
     userRole() {
       return this.$store.getters.StateUserRole;
     },
+    checkMessages() {
+      return this.newMessage ? 'bx bxs-bell-ring msgicon' : 'bx bx-bell msgicon';
+    },
   },
   methods: {
     RouteClick(route) {
+      if (route === 'SafepostBox') {
+        this.newMessage = false;
+      }
       this.$router.push(route);
     },
     ...mapActions(['LogOut']),
@@ -129,10 +137,16 @@ export default {
       await this.$store.dispatch('LogOut');
       this.$router.push('Login');
     },
+    emitNewMsg() {
+      this.$root.$emit('userLastCount'); // like this
+    },
   },
   name: 'Navigation',
 };
 </script>
 
 <style>
+.msgicon {
+  color: rgb(212, 52, 52)
+}
 </style>

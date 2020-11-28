@@ -5,7 +5,7 @@
       <label id="top">Vad gäller ärendet?</label>
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
-      <select>
+      <select style="outline: none;">
         <option></option>
         <option>Bedrägeri</option>
         <option>Penningtvätt</option>
@@ -98,6 +98,7 @@ textarea {
   -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+     outline: none;
 }
 select{
   margin-bottom: 25px;
