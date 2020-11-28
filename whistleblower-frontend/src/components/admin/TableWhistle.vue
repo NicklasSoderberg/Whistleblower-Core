@@ -37,7 +37,7 @@
               {{ tr.currentStatus }}
             </vs-td>
             <vs-td>
-              {{ tr.id }}
+              {{ tr.whistleID }}
             </vs-td>
             <vs-td>
               {{ tr.aboutInfo }}
@@ -99,6 +99,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 
 export default {
   components: {},
@@ -114,6 +115,21 @@ export default {
     editProp: {},
     whistles: [],
   }),
+  methods: {
+    fillTable() {
+      axios.get('Whistle',
+        {
+          headers: {
+            Authorization: `Bearer ${this.$store.getters.StateUserToken}`,
+          },
+        }).then((response) => {
+        this.whistles = response.data;
+      });
+    },
+  },
+  mounted() {
+    this.fillTable();
+  },
 };
 </script>
 

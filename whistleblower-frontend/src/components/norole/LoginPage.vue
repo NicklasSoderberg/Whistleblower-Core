@@ -80,10 +80,10 @@ export default {
             this.$router.push('admin');
             break;
           case 'Lawyer':
-            this.$router.push('reportstatus');
+            this.$router.push('whistlehandler');
             break;
           case 'User':
-            this.$router.push('WhistleHandler');
+            this.$router.push('reportstatus');
             break;
           default:
             break;
