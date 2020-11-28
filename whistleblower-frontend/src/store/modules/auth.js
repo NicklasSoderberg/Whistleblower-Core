@@ -8,7 +8,7 @@ const state = {
   role: null,
   token: null,
 };
-const axiosConfig = {
+const loginConfig = {
   headers: {
     'Content-Type': 'application/json',
   },
@@ -21,7 +21,7 @@ const getters = {
 };
 const actions = {
   async LogIn({ commit }, User) {
-    const res = await axios.post('Authenticate/login', User, axiosConfig);
+    const res = await axios.post('Authenticate/login', User, loginConfig);
     await commit('setUser', User.username);
     await commit('setRole', res.data.role);
     await commit('setToken', res.data.token);
