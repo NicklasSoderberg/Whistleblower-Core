@@ -5,7 +5,8 @@ import axios from 'axios';
 
 const state = {
   user: null,
-  posts: null,
+  role: null,
+  token: null,
 };
 const axiosConfig = {
   headers: {
@@ -14,45 +15,36 @@ const axiosConfig = {
 };
 const getters = {
   isAuthenticated: (state) => !!state.user,
-  StatePosts: (state) => state.posts,
   StateUser: (state) => state.user,
+  StateUserRole: (state) => state.role,
+  StateUserToken: (state) => state.StateUserToken,
 };
 const actions = {
-  async Register({ dispatch }, form) {
-    await axios.post('register', form);
-    const UserForm = new FormData();
-    UserForm.append('username', form.username);
-    UserForm.append('password', form.password);
-    await dispatch('LogIn', UserForm);
-  },
   async LogIn({ commit }, User) {
-    console.log(JSON.stringify(User));
-    await axios.post('login', User, axiosConfig);
-    await commit('setUser', User.get('username'));
-  },
-  async CreatePost({ dispatch }, post) {
-    await axios.post('post', post);
-    await dispatch('GetPosts');
-  },
-  async GetPosts({ commit }) {
-    const response = await axios.get('posts');
-    commit('setPosts', response.data);
+    const res = await axios.post('Authenticate/login', User, axiosConfig);
+    await commit('setUser', User.username);
+    await commit('setRole', res.data.role);
+    await commit('setToken', res.data.token);
   },
   async LogOut({ commit }) {
     const user = null;
-    commit('logout', user);
+    commit('LogOut', user);
   },
 };
 const mutations = {
   setUser(state, username) {
     state.user = username;
   },
-  setPosts(state, posts) {
-    state.posts = posts;
+  setRole(state, role) {
+    state.role = role;
+  },
+  setToken(state, token) {
+    state.token = token;
   },
   LogOut(state) {
     state.user = null;
-    state.posts = null;
+    state.role = null;
+    state.token = null;
   },
 };
 export default {

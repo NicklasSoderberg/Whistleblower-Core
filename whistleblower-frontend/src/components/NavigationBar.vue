@@ -5,11 +5,8 @@
           <a onclick="window.open('http://www.omegapoint.se', '_blank')">
           <img src="../assets/omegapoint.png" alt="" height="40" width="95">
           </a>
-          <p v-if="Role == 'lawyer'">
-            Inloggad: Sven
-          </p>
         </template>
-        <template v-if="setRole == ''">
+        <template v-if="userRole == null">
            <vs-navbar-item :active="active == 'Home'" id="Home"
            v-on:click="RouteClick('/')">
             Om
@@ -23,7 +20,7 @@
             Följ upp ärende
           </vs-navbar-item>
         </template>
-        <template v-else-if="setRole == 'user'">
+        <template v-else-if="userRole == 'User'">
           <vs-navbar-item :active="active == 'Mitt ärende'" id="Mitt ärende"
            v-on:click="RouteClick('Reportstatus')">
             Mitt ärende
@@ -34,13 +31,13 @@
             <i class='bx bxs-message' ></i>
           </vs-navbar-item>
         </template>
-        <template v-else-if="setRole == 'lawyer'">
+        <template v-else-if="userRole == 'Lawyer'">
           <vs-navbar-item :active="active == 'Home'" id="Home"
            v-on:click="RouteClick('/WhistleHandler')">
             Mina ärende
           </vs-navbar-item>
         </template>
-        <template v-else-if="setRole == 'admin'">
+        <template v-else-if="userRole == 'Admin'">
           <vs-navbar-item :active="active == 'Admin'" id="Admin"
            v-on:click="RouteClick('Admin')">
             Ärende
@@ -55,44 +52,48 @@
           </vs-navbar-item>
         </template>
         <template #right>
-          <select v-model="setRole">
-            <option></option>
-            <option>admin</option>
-            <option>user</option>
-            <option>lawyer</option>
-          </select>
           <span v-if="isLoggedIn">
             <p>Auth: Logged in</p>
           </span>
           <span v-else>
             <p>Auth: Not logged in</p>
           </span>
-          <vs-button flat v-if="setRole != ''" danger relief>Logout</vs-button>
+          <vs-button flat v-if="isLoggedIn" v-on:click="logout()"
+          danger relief>Logout</vs-button>
           <vs-button flat v-else v-on:click="RouteClick('Login')">Login</vs-button>
         </template>
       </vs-navbar>
     </div>
   </template>
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   data: () => ({
     active: 'Home',
-    setRole: '',
   }),
   computed: {
     isLoggedIn() { return this.$store.getters.isAuthenticated; },
+    userRole() { return this.$store.getters.StateUserRole; },
   },
   methods: {
     RouteClick(route) {
       this.$router.push(route);
     },
+    ...mapActions(['LogOut']),
+    async LogOutUser() {
+      try {
+        await this.LogOut();
+        this.$router.push('/');
+        this.showError = false;
+      } catch (error) {
+        this.showError = true;
+      }
+    },
     async logout() {
       await this.$store.dispatch('LogOut');
-      this.$router.push('/Login');
+      this.$router.push('Login');
     },
-  },
-  props: {
-    Role: String,
   },
   name: 'Navigation',
 };

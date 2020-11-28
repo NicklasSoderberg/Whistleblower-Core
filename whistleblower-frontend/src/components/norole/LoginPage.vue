@@ -26,7 +26,7 @@
         </template>
         </vs-input>
         <vs-row justify="center" align="center">
-        <vs-button gradient primary @click="this.login" type="submit">Logga in</vs-button>
+        <vs-button gradient primary type="submit">Logga in</vs-button>
       </vs-row>
       </div>
       </vs-row>
@@ -81,7 +81,6 @@ export default {
       }
     },
     checkCapsLock() {
-      console.log('caps metod');
       const input = document.getElementById('username');
 
       input.addEventListener('keyup', (event) => {
@@ -93,7 +92,6 @@ export default {
       });
     },
     login() {
-      console.log('begin');
       if (this.form.username !== '' && this.form.password !== '') {
         this.passInput = true;
         this.userInput = true;
