@@ -9,7 +9,7 @@
             <vs-th sort @click="whistles = $vs.sortData($event ,whistles, 'currentStatus')">
               Status
             </vs-th>
-            <vs-th sort @click="whistles = $vs.sortData($event ,whistles, 'id')">
+            <vs-th sort @click="whistles = $vs.sortData($event ,whistles, 'whistleID')">
               ID
             </vs-th>
             <vs-th sort @click="whistles = $vs.sortData($event ,whistles, 'aboutInfo')">
@@ -33,7 +33,8 @@
             :data="tr"
             :is-selected="selected == tr"
           >
-            <vs-td edit @click="edit = tr, editProp = 'currentStatus', editActive = true">
+            <vs-td edit @click="edit = tr, editProp = 'currentStatus',
+                        editActive = true">
               {{ tr.currentStatus }}
             </vs-td>
             <vs-td>
@@ -63,7 +64,8 @@
             <h3 v-if="editProp == 'currentStatus'">Ändra status</h3>
         </template>
         <vs-row type="flex" justify="center" align="center">
-        <vs-select @change="editActive = false" block v-if="editProp == 'currentStatus'"
+        <vs-select @change="editActive = false, editStatus(edit)"
+                    block v-if="editProp == 'currentStatus'"
                   placeholder="Select" v-model="edit[editProp]">
           <vs-option value="Aktiv">
             Aktiv
@@ -125,6 +127,20 @@ export default {
         }).then((response) => {
         this.whistles = response.data;
       });
+    },
+    updateWhistle(whistleToUpdate) {
+      console.log(`Trying to update ID:${whistleToUpdate.whistleID} with new status`);
+      axios.put(`Whistle/${whistleToUpdate.whistleID}`, whistleToUpdate, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.$store.getters.StateUserToken}`,
+        },
+      }).then((response) => {
+        console.log(`New status is: ${response.data.currentStatus}`);
+      });
+    },
+    editStatus(input) {
+      this.updateWhistle(input);
     },
   },
   mounted() {
