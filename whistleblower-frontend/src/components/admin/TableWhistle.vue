@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import whistle from '../../apicalls/whistle';
 
 export default {
   components: {},
@@ -119,25 +119,12 @@ export default {
   }),
   methods: {
     fillTable() {
-      axios.get('Whistle',
-        {
-          headers: {
-            Authorization: `Bearer ${this.$store.getters.StateUserToken}`,
-          },
-        }).then((response) => {
-        this.whistles = response.data;
+      whistle.getAllWhistles(this.$store.getters.StateUserToken).then((response) => {
+        this.whistles = response;
       });
     },
     updateWhistle(whistleToUpdate) {
-      console.log(`Trying to update ID:${whistleToUpdate.whistleID} with new status`);
-      axios.put(`Whistle/${whistleToUpdate.whistleID}`, whistleToUpdate, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.$store.getters.StateUserToken}`,
-        },
-      }).then((response) => {
-        console.log(`New status is: ${response.data.currentStatus}`);
-      });
+      whistle.updateWhistle(this.$store.getters.StateUserToken, whistleToUpdate);
     },
     editStatus(input) {
       this.updateWhistle(input);

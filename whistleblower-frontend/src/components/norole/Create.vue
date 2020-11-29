@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import whistle from '../../apicalls/whistle';
 
 export default {
   name: 'Create',
@@ -80,8 +80,7 @@ export default {
   }),
   methods: {
     createWhistle() {
-      console.log(this.newWhistle);
-      axios.post('whistle', {
+      whistle.createWhistle({
         whistleID: 0,
         lawyerID: null,
         userID: null,
@@ -96,12 +95,6 @@ export default {
         deleted: null,
         active: true,
         removedAdminID: null,
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then((response) => {
-        console.log(response.data);
       });
     },
   },
