@@ -53,6 +53,7 @@ namespace API.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<DtoSubject>> Post(DtoSubject subjectInput)
         {
