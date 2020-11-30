@@ -13,6 +13,18 @@ const subject = {
     });
     return responseData;
   },
+  async getAllActive() {
+    let responseData;
+    await axios.get('Subject/true',
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((response) => {
+      responseData = response.data;
+    });
+    return responseData;
+  },
   create(token, input) {
     axios.post('Subject', input, {
       headers: {

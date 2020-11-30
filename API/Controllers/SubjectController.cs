@@ -29,7 +29,7 @@ namespace API.Controllers
         {
             try
             {
-                var result = await _repository.GetAllSubjects();
+                var result = await _repository.GetAllSubjects(false);
                 return _mapper.Map<DtoSubject[]>(result);
             }
             catch
@@ -38,14 +38,13 @@ namespace API.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin,Lawyer")]
-        [HttpGet("{subjectID}")]
-        public async Task<ActionResult<DtoSubject>> Get(int subjectID)
+        [HttpGet("{getActiveOnly}")]
+        public async Task<ActionResult<DtoSubject[]>> Get(bool getActiveOnly)
         {
             try
             {
-                var result = await _repository.GetSubject(subjectID);
-                return _mapper.Map<DtoSubject>(result);
+                var result = await _repository.GetAllSubjects(getActiveOnly);
+                return _mapper.Map<DtoSubject[]>(result);
             }
             catch
             {
@@ -57,6 +56,10 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<DtoSubject>> Post(DtoSubject subjectInput)
         {
+            if (subjectInput.Text == "")
+            {
+                return BadRequest();
+            }
             try
             {
                 Subject s = _mapper.Map<Subject>(subjectInput);

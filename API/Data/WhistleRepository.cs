@@ -61,9 +61,17 @@ namespace API.Data
             return await query.ToArrayAsync();
         }
 
-        public async Task<Subject[]> GetAllSubjects(bool getInActive = false)
+        public async Task<Subject[]> GetAllSubjects(bool getOnlyActive = false)
         {
-            IQueryable<Subject> query = _context.Subjects.Where(c => c.SubjectID == c.SubjectID);
+            IQueryable<Subject> query;
+            if (!getOnlyActive)
+            {
+                query = _context.Subjects.Where(c => c.SubjectID == c.SubjectID);
+            }
+            else
+            {
+                query = _context.Subjects.Where(c => (c.SubjectID == c.SubjectID) && (c.Active == true));
+            }
             return await query.ToArrayAsync();
         }
 

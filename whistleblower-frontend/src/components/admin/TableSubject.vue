@@ -6,9 +6,6 @@
         </template>
         <template #thead>
           <vs-tr>
-            <vs-th sort @click="subjects = $vs.sortData($event ,subjects, 'subjectID')">
-              ID
-            </vs-th>
             <vs-th sort @click="subjects = $vs.sortData($event ,subjects, 'text')">
               Ämne
             </vs-th>
@@ -24,14 +21,12 @@
             :data="tr"
             :is-selected="selected == tr"
           >
-            <vs-td :key="tr.subjectID">
-              {{ tr.subjectID }}
-            </vs-td>
             <vs-td :key="tr.text">
             {{ tr.text }}
             </vs-td>
             <vs-td edit @click="edit = tr, editActive = true" :key="tr.active">
-            {{ tr.active }}
+              <span v-if="tr.active">Visas</span>
+              <span v-else>Visas inte</span>
             </vs-td>
           </vs-tr>
         </template>
@@ -39,16 +34,19 @@
           <vs-pagination v-model="page" :length="$vs.getLength(subjects, max)" />
         </template>
       </vs-table>
-      <vs-dialog v-model="editActive">
+      <vs-dialog blur not-close v-model="editActive">
         <template #header>
-            <p>Sätt ämnet "{{edit.text}}" till {{!edit.active}}?</p>
+            <p v-if="edit.active">Är du säker du vill gömma ämnet "{{edit.text}}"?</p>
+            <p v-else>Är du säker du vill visa ämnet "{{edit.text}}"?</p>
         </template>
         <vs-row type="flex" justify="center" align="center">
-          <vs-button flat @click="editActive = !editActive">Avbryt</vs-button>
           <vs-button gradient danger v-model="edit"
-                    @click="updateSubject(edit), editActive = !editActive">
+                    @click="updateSubject(edit),
+                            openNotification(4000),
+                            editActive = !editActive">
               Genomför
           </vs-button>
+          <vs-button flat @click="editActive = !editActive">Avbryt</vs-button>
         </vs-row>
       </vs-dialog>
     </div>
@@ -56,6 +54,7 @@
 
 <script>
 import subject from '../../apicalls/subject';
+import NotificationHelper from './NotificationHelper.vue';
 
 export default {
   components: { },
@@ -66,7 +65,7 @@ export default {
     active2: false,
     search: '',
     page: 1,
-    max: 10,
+    max: 20,
     subjects: [],
     edit: '',
     editActive: false,
@@ -89,6 +88,16 @@ export default {
         this.getOptions();
       });
     },
+    openNotification(duration) {
+      // eslint-disable-next-line no-unused-vars
+      const noti = this.$vs.notification({
+        duration,
+        progress: 'auto',
+        sticky: true,
+        color: 'success',
+        content: NotificationHelper,
+      });
+    },
   },
   mounted() {
     this.getOptions();
@@ -106,5 +115,8 @@ export default {
 }
 .W100{
   width: 100%;
+}
+#deleteButton{
+  margin-top: 40px;
 }
 </style>

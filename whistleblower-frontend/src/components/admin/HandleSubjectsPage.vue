@@ -17,16 +17,16 @@
         <div class="hello">
           <div id="firstspace">
             <vs-row type="flex" justify="center" align="center">
-              <vs-input label="Subject name" v-model="subjectName"> </vs-input>
+              <vs-input label="Visningsnamn" v-model="subjectName"> </vs-input>
             </vs-row>
           </div>
         </div>
         <div id="space">
           <vs-row type="flex" justify="center" align="center">
-            <vs-button flat @click="active = !active">Avbryt</vs-button>
             <vs-button gradient primary @click="createSubject(subjectName), active = !active">
-              <i class="bx bxs-user-plus"></i>Lägg till</vs-button
+              Lägg till</vs-button
             >
+            <vs-button flat @click="active = !active">Avbryt</vs-button>
           </vs-row>
         </div>
       </vs-dialog>
@@ -64,6 +64,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #space {
-  margin-top: 35px;
+  margin-top: 25px;
 }
 </style>

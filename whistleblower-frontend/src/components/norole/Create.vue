@@ -101,7 +101,7 @@ export default {
       });
     },
     getOptions() {
-      subject.getAll().then((response) => {
+      subject.getAllActive().then((response) => {
         this.options = response;
       });
     },
