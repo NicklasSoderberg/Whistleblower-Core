@@ -80,7 +80,7 @@ export default {
   }),
   methods: {
     createWhistle() {
-      whistle.createWhistle({
+      whistle.create({
         whistleID: 0,
         lawyerID: null,
         userID: null,

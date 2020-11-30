@@ -119,12 +119,12 @@ export default {
   }),
   methods: {
     fillTable() {
-      whistle.getAllWhistles(this.$store.getters.StateUserToken).then((response) => {
+      whistle.getAll(this.$store.getters.StateUserToken).then((response) => {
         this.whistles = response;
       });
     },
     updateWhistle(whistleToUpdate) {
-      whistle.updateWhistle(this.$store.getters.StateUserToken, whistleToUpdate);
+      whistle.update(this.$store.getters.StateUserToken, whistleToUpdate);
     },
     editStatus(input) {
       this.updateWhistle(input);
