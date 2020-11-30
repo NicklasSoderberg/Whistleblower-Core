@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const whistle = {
-  async getAllWhistles(token) {
+  async getAll(token) {
     let responseData;
     await axios.get('Whistle',
       {
@@ -13,7 +13,7 @@ const whistle = {
     });
     return responseData;
   },
-  createWhistle(input) {
+  create(input) {
     axios.post('whistle', input, {
       headers: {
         'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ const whistle = {
       console.log(response.data);
     });
   },
-  async updateWhistle(token, whistleToUpdate) {
+  async update(token, whistleToUpdate) {
     let responseData;
     await axios.put(`Whistle/${whistleToUpdate.whistleID}`, whistleToUpdate, {
       headers: {
