@@ -7,8 +7,9 @@
       <vs-row type="flex" justify="center" align="center">
       <select v-model="newWhistle.About" style="outline: none;">
         <option></option>
-        <option>Bedrägeri</option>
-        <option>Penningtvätt</option>
+        <option v-for="(option, index) in options" :key="index">
+          {{option.text}}
+        </option>
       </select>
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
@@ -64,12 +65,14 @@
 
 <script>
 import whistle from '../../apicalls/whistle';
+import subject from '../../apicalls/subject';
 
 export default {
   name: 'Create',
   data: () => ({
     value: '',
     active: false,
+    options: [],
     newWhistle: {
       about: '',
       when: '',
@@ -97,6 +100,14 @@ export default {
         removedAdminID: null,
       });
     },
+    getOptions() {
+      subject.getAll().then((response) => {
+        this.options = response;
+      });
+    },
+  },
+  mounted() {
+    this.getOptions();
   },
 };
 </script>
