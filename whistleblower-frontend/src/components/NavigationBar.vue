@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vs-navbar leftCollapsed shadow v-model="active">
+    <vs-navbar leftCollapsed shadow v-model="curRoute">
       <template #left>
         <a onclick="window.open('http://www.omegapoint.se', '_blank')">
           <img src="../assets/omegapoint.png" alt="" height="40" width="95" />
@@ -8,21 +8,21 @@
       </template>
       <template v-if="userRole == null">
         <vs-navbar-item
-          :active="active == 'Home'"
-          id="Home"
+          :active="curRoute == 'HomePage'"
+          id="HomePage"
           v-on:click="RouteClick('/')"
         >
           Om
         </vs-navbar-item>
         <vs-navbar-item
-          :active="active == 'Create'"
+          :active="curRoute == 'Create'"
           id="Create"
           v-on:click="RouteClick('Create')"
         >
           Skapa ärende
         </vs-navbar-item>
         <vs-navbar-item
-          :active="active == 'FollowUp'"
+          :active="curRoute == 'FollowUp'"
           id="FollowUp"
           v-on:click="RouteClick('FollowUp')"
         >
@@ -31,14 +31,14 @@
       </template>
       <template v-else-if="userRole == 'User'">
         <vs-navbar-item
-          :active="active == 'Mitt ärende'"
+          :active="curRoute == 'Mitt ärende'"
           id="Mitt ärende"
           v-on:click="RouteClick('Reportstatus')"
         >
           Mitt ärende
         </vs-navbar-item>
         <vs-navbar-item
-          :active="active == 'SafePostBox'"
+          :active="curRoute == 'SafePostBox'"
           id="SafePostBox"
           v-on:click="RouteClick('SafepostBox')"
           icon-after
@@ -49,7 +49,7 @@
       </template>
       <template v-else-if="userRole == 'Lawyer'">
         <vs-navbar-item
-          :active="active == 'Home'"
+          :active="curRoute == 'Home'"
           id="Home"
           v-on:click="RouteClick('/WhistleHandler')"
         >
@@ -58,22 +58,22 @@
       </template>
       <template v-else-if="userRole == 'Admin'">
         <vs-navbar-item
-          :active="active == 'Admin'"
-          id="Admin"
+          :active="curRoute== 'AdminPage'"
+          id="AdminPage"
           v-on:click="RouteClick('Admin')"
         >
           Ärende
         </vs-navbar-item>
         <vs-navbar-item
-          :active="active == 'Lawyer'"
-          id="Lawyer"
+          :active="curRoute == 'AdminNewLawyer'"
+          id="AdminNewLawyer"
           v-on:click="RouteClick('NewLawyer')"
         >
           Advokater
         </vs-navbar-item>
         <vs-navbar-item
-          :active="active == 'Subject'"
-          id="Subject"
+          :active="curRoute == 'AdminNewSubject'"
+          id="AdminNewSubject"
           v-on:click="RouteClick('NewSubject')"
         >
           Ämnen
@@ -86,12 +86,17 @@
         <span v-else>
           <p>Auth: Not logged in</p>
         </span>
+        <vs-navbar-item
+          :active="curRoute == 'Login'"
+          id="Login"
+        >
         <vs-button flat v-if="isLoggedIn" v-on:click="logout()" danger relief
           >Logout</vs-button
         >
         <vs-button flat v-else v-on:click="RouteClick('Login')"
           >Login</vs-button
         >
+        </vs-navbar-item>
       </template>
     </vs-navbar>
   </div>
@@ -102,8 +107,8 @@ import { mapActions } from 'vuex';
 
 export default {
   data: () => ({
-    active: 'Home',
     newMessage: true,
+    curRoute: '',
   }),
   computed: {
     isLoggedIn() {
@@ -122,6 +127,7 @@ export default {
         this.newMessage = false;
       }
       this.$router.push(route);
+      this.curRoute = this.$route.name;
     },
     ...mapActions(['LogOut']),
     async LogOutUser() {

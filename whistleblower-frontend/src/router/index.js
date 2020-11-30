@@ -49,37 +49,37 @@ const routes = [{
   path: '/admin',
   name: 'AdminPage',
   component: HandleCasesPage,
-  meta: { requiresAuth: true },
+  meta: { requiresAuth: true, adminAuth: true },
 },
 {
   path: '/newlawyer',
   name: 'AdminNewLawyer',
   component: HandleLawyersPage,
-  meta: { requiresAuth: true },
+  meta: { requiresAuth: true, adminAuth: true },
 },
 {
   path: '/newsubject',
   name: 'AdminNewSubject',
   component: HandleSubjectsPage,
-  meta: { requiresAuth: true },
+  meta: { requiresAuth: true, adminAuth: true },
 },
 {
   path: '/reportstatus',
   name: 'StatusPage',
   component: StatusPage,
-  meta: { requiresAuth: true },
+  meta: { requiresAuth: true, userAuth: true },
 },
 {
   path: '/safepostbox',
   name: 'SafepostBox',
   component: SafepostBox,
-  meta: { requiresAuth: true },
+  meta: { requiresAuth: true, userAuth: true, lawyerAuth: true },
 },
 {
   path: '/whistleHandler',
   name: 'WhistleHandler',
-  component: WhistleHandler,
-  meta: { requiresAuth: true },
+  component: WhistleHandlerPage,
+  meta: { requiresAuth: true, lawyerAuth: true },
 }];
 
 const router = new VueRouter({
@@ -91,22 +91,35 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (store.getters.isAuthenticated) {
+      switch (store.getters.StateUserRole) {
+        case 'Admin':
+          if (!to.meta.adminAuth) {
+            next('Admin');
+          } else {
+            next();
+          }
+          break;
+        case 'Lawyer':
+          if (!to.meta.lawyerAuth) {
+            next('whistleHandler');
+          } else {
+            next();
+          }
+          break;
+        case 'User':
+          if (!to.meta.userAuth) {
+            next('reportstatus');
+          } else {
+            next();
+          }
+          break;
+        default:
+          break;
+      }
       next();
       return;
     }
     next('/login');
-  } else {
-    next();
-  }
-});
-
-router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.guest)) {
-    if (store.getters.isAuthenticated) {
-      next('/posts');
-      return;
-    }
-    next();
   } else {
     next();
   }

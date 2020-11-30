@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Authorize(Roles = "Admin,Lawyer")]
     [Route("api/[controller]")]
     [ApiController]
     public class WhistleController : ControllerBase
@@ -25,6 +24,7 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
+        [Authorize(Roles = "Admin,Lawyer")]
         [HttpGet]
         public async Task<ActionResult<DtoWhistle[]>> Get()
         {
@@ -39,6 +39,7 @@ namespace API.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin,Lawyer")]
         [HttpGet("{whistleID}")]
         public async Task<ActionResult<DtoWhistle>> Get(int whistleID)
         {
@@ -72,6 +73,7 @@ namespace API.Controllers
             return BadRequest();
         }
 
+        [Authorize(Roles = "Admin,Lawyer")]
         [HttpPut("{whistleID}")]
         public async Task<ActionResult<DtoWhistle>> Put(int whistleID, DtoWhistle WhistleInput)
         {
@@ -93,6 +95,7 @@ namespace API.Controllers
             return BadRequest();
         }
 
+        [Authorize(Roles = "Admin,Lawyer")]
         [HttpDelete("{whistleID}")]
         public async Task<IActionResult> Delete(int whistleID)
         {

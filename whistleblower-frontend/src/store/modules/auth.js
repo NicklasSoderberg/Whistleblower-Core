@@ -17,7 +17,7 @@ const getters = {
   isAuthenticated: (state) => !!state.user,
   StateUser: (state) => state.user,
   StateUserRole: (state) => state.role,
-  StateUserToken: (state) => state.StateUserToken,
+  StateUserToken: (state) => state.token,
 };
 const actions = {
   async LogIn({ commit }, User) {

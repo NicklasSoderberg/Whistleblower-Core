@@ -9,7 +9,7 @@
             <vs-th sort @click="whistles = $vs.sortData($event ,whistles, 'currentStatus')">
               Status
             </vs-th>
-            <vs-th sort @click="whistles = $vs.sortData($event ,whistles, 'id')">
+            <vs-th sort @click="whistles = $vs.sortData($event ,whistles, 'whistleID')">
               ID
             </vs-th>
             <vs-th sort @click="whistles = $vs.sortData($event ,whistles, 'aboutInfo')">
@@ -33,11 +33,12 @@
             :data="tr"
             :is-selected="selected == tr"
           >
-            <vs-td edit @click="edit = tr, editProp = 'currentStatus', editActive = true">
+            <vs-td edit @click="edit = tr, editProp = 'currentStatus',
+                        editActive = true">
               {{ tr.currentStatus }}
             </vs-td>
             <vs-td>
-              {{ tr.id }}
+              {{ tr.whistleID }}
             </vs-td>
             <vs-td>
               {{ tr.aboutInfo }}
@@ -63,7 +64,8 @@
             <h3 v-if="editProp == 'currentStatus'">Ändra status</h3>
         </template>
         <vs-row type="flex" justify="center" align="center">
-        <vs-select @change="editActive = false" block v-if="editProp == 'currentStatus'"
+        <vs-select @change="editActive = false, editStatus(edit)"
+                    block v-if="editProp == 'currentStatus'"
                   placeholder="Select" v-model="edit[editProp]">
           <vs-option value="Aktiv">
             Aktiv
@@ -99,6 +101,7 @@
 </template>
 
 <script>
+import whistle from '../../apicalls/whistle';
 
 export default {
   components: {},
@@ -114,6 +117,22 @@ export default {
     editProp: {},
     whistles: [],
   }),
+  methods: {
+    fillTable() {
+      whistle.getAllWhistles(this.$store.getters.StateUserToken).then((response) => {
+        this.whistles = response;
+      });
+    },
+    updateWhistle(whistleToUpdate) {
+      whistle.updateWhistle(this.$store.getters.StateUserToken, whistleToUpdate);
+    },
+    editStatus(input) {
+      this.updateWhistle(input);
+    },
+  },
+  mounted() {
+    this.fillTable();
+  },
 };
 </script>
 
