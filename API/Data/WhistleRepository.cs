@@ -60,5 +60,17 @@ namespace API.Data
             IQueryable<File> query = _context.Files.Where(c => c.WhistleID == WhistleID);
             return await query.ToArrayAsync();
         }
+
+        public async Task<Subject[]> GetAllSubjects(bool getInActive = false)
+        {
+            IQueryable<Subject> query = _context.Subjects.Where(c => c.SubjectID == c.SubjectID);
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Subject> GetSubject(int subjectID)
+        {
+            IQueryable<Subject> query = _context.Subjects.Where(c => c.SubjectID == subjectID);
+            return await query.FirstOrDefaultAsync();
+        }
     }
 }
