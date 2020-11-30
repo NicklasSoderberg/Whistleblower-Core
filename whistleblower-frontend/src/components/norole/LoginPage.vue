@@ -37,7 +37,6 @@
 
 <script>
 import { mapActions } from 'vuex';
-// import api from '../api/api';
 
 export default {
   name: 'Login',
