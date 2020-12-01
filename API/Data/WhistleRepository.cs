@@ -63,6 +63,8 @@ namespace API.Data
         public async Task<Whistle> GetUserWhistle(Guid userId)
         {
             IQueryable<Whistle> query = _context.Whistles.Where(c => c.UserID == userId);
+            return await query.FirstOrDefaultAsync();
+        }
 
         public async Task<Subject[]> GetAllSubjects(bool getOnlyActive = false)
         {
