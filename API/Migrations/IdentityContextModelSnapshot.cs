@@ -171,26 +171,6 @@ namespace API.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("API.Data.Entities.Lawyer", b =>
-                {
-                    b.Property<Guid>("LawyerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("LawyerName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("LawyerId");
-
-                    b.ToTable("Lawyers");
-                });
-
             modelBuilder.Entity("API.Data.Entities.Whistle", b =>
                 {
                     b.Property<int>("WhistleID")
