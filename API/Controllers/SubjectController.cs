@@ -13,25 +13,24 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class WhistleController : ControllerBase
+    public class SubjectController : ControllerBase
     {
         private readonly IWhistleRepository _repository;
         private readonly IMapper _mapper;
 
-        public WhistleController(IWhistleRepository repository, IMapper mapper)
+        public SubjectController(IWhistleRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
 
-        [Authorize(Roles = "Admin,Lawyer")]
         [HttpGet]
-        public async Task<ActionResult<DtoWhistle[]>> Get()
+        public async Task<ActionResult<DtoSubject[]>> Get()
         {
             try
             {
-                var result = await _repository.GetAllWhistles();
-                return _mapper.Map<DtoWhistle[]>(result);
+                var result = await _repository.GetAllSubjects(false);
+                return _mapper.Map<DtoSubject[]>(result);
             }
             catch
             {
@@ -39,14 +38,13 @@ namespace API.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin,Lawyer")]
-        [HttpGet("{whistleID}")]
-        public async Task<ActionResult<DtoWhistle>> Get(int whistleID)
+        [HttpGet("{getActiveOnly}")]
+        public async Task<ActionResult<DtoSubject[]>> Get(bool getActiveOnly)
         {
             try
             {
-                var result = await _repository.GetWhistle(whistleID);
-                return _mapper.Map<DtoWhistle>(result);
+                var result = await _repository.GetAllSubjects(getActiveOnly);
+                return _mapper.Map<DtoSubject[]>(result);
             }
             catch
             {
@@ -54,16 +52,21 @@ namespace API.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<ActionResult<DtoWhistle>> Post(DtoWhistle WhistleInput)
+        public async Task<ActionResult<DtoSubject>> Post(DtoSubject subjectInput)
         {
+            if (subjectInput.Text == "")
+            {
+                return BadRequest();
+            }
             try
             {
-                Whistle W = _mapper.Map<Whistle>(WhistleInput);
-                _repository.Add(W);
+                Subject s = _mapper.Map<Subject>(subjectInput);
+                _repository.Add(s);
                 if (await _repository.SaveChangesAsync())
                 {
-                    return Created($"/api/whistle/", _mapper.Map<DtoWhistle>(W));
+                    return Created($"/api/subject/", _mapper.Map<DtoSubject>(s));
                 }
             }
             catch
@@ -73,19 +76,19 @@ namespace API.Controllers
             return BadRequest();
         }
 
-        [Authorize(Roles = "Admin,Lawyer")]
-        [HttpPut("{whistleID}")]
-        public async Task<ActionResult<DtoWhistle>> Put(int whistleID, DtoWhistle WhistleInput)
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{subjectID}")]
+        public async Task<ActionResult<DtoSubject>> Put(int subjectID, DtoSubject subjectInput)
         {
             try
             {
-                var oldWhistle = await _repository.GetWhistle(whistleID);
-                if (oldWhistle == null)
+                var oldSubject = await _repository.GetSubject(subjectID);
+                if (oldSubject == null)
                     return NotFound("");
-                _mapper.Map(WhistleInput, oldWhistle);
+                _mapper.Map(subjectInput, oldSubject);
                 if (await _repository.SaveChangesAsync())
                 {
-                    return _mapper.Map<DtoWhistle>(oldWhistle);
+                    return _mapper.Map<DtoSubject>(oldSubject);
                 }
             }
             catch
@@ -95,16 +98,16 @@ namespace API.Controllers
             return BadRequest();
         }
 
-        [Authorize(Roles = "Admin,Lawyer")]
-        [HttpDelete("{whistleID}")]
-        public async Task<IActionResult> Delete(int whistleID)
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{subjectID}")]
+        public async Task<IActionResult> Delete(int subjectID)
         {
             try
             {
-                var oldWhistle = await _repository.GetWhistle(whistleID);
-                if (oldWhistle == null)
+                var oldSubject = await _repository.GetSubject(subjectID);
+                if (oldSubject == null)
                     return NotFound("");
-                _repository.Delete(oldWhistle);
+                _repository.Delete(oldSubject);
                 if (await _repository.SaveChangesAsync())
                 {
                     return Ok();

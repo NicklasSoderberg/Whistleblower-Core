@@ -9,7 +9,7 @@
             <vs-th sort @click="whistles = $vs.sortData($event ,whistles, 'currentStatus')">
               Status
             </vs-th>
-            <vs-th sort @click="whistles = $vs.sortData($event ,whistles, 'id')">
+            <vs-th sort @click="whistles = $vs.sortData($event ,whistles, 'whistleID')">
               ID
             </vs-th>
             <vs-th sort @click="whistles = $vs.sortData($event ,whistles, 'aboutInfo')">
@@ -33,11 +33,12 @@
             :data="tr"
             :is-selected="selected == tr"
           >
-            <vs-td edit @click="edit = tr, editProp = 'currentStatus', editActive = true">
+            <vs-td edit @click="edit = tr, editProp = 'currentStatus',
+                        editActive = true">
               {{ tr.currentStatus }}
             </vs-td>
             <vs-td>
-              {{ tr.id }}
+              {{ tr.whistleID }}
             </vs-td>
             <vs-td>
               {{ tr.aboutInfo }}
@@ -63,7 +64,8 @@
             <h3 v-if="editProp == 'currentStatus'">Ändra status</h3>
         </template>
         <vs-row type="flex" justify="center" align="center">
-        <vs-select @change="editActive = false" block v-if="editProp == 'currentStatus'"
+        <vs-select @change="editActive = false, editStatus(edit), openNotification(4000)"
+                    block v-if="editProp == 'currentStatus'"
                   placeholder="Select" v-model="edit[editProp]">
           <vs-option value="Aktiv">
             Aktiv
@@ -99,6 +101,8 @@
 </template>
 
 <script>
+import whistle from '../../apicalls/whistle';
+import NotificationHelper from './NotificationHelper.vue';
 
 export default {
   components: {},
@@ -112,54 +116,34 @@ export default {
     editActive: false,
     edit: null,
     editProp: {},
-    whistles: [
-      {
-        id: 1,
-        lawyerName: 'Sven',
-        aboutInfo: 'Terrorism',
-        currentStatus: 'Aktiv',
-        created: '2020-11-20 09:38',
-        modified: '2020-11-20 10:18',
-        active: true,
-      },
-      {
-        id: 2,
-        lawyerName: 'Gunnar',
-        aboutInfo: 'Olaga hot',
-        currentStatus: 'Aktiv',
-        created: '2020-11-18 09:38',
-        modified: '2020-11-20 17:18',
-        active: true,
-      },
-      {
-        id: 3,
-        lawyerName: 'Olof',
-        aboutInfo: 'Penningtvätt',
-        currentStatus: 'Aktiv',
-        created: '2020-11-12 19:38',
-        modified: '2020-11-20 07:18',
-        active: true,
-      },
-      {
-        id: 4,
-        lawyerName: 'Sven',
-        aboutInfo: 'Olaga hot',
-        currentStatus: 'Aktiv',
-        created: '2020-11-18 09:38',
-        modified: '2020-11-20 17:18',
-        active: true,
-      },
-      {
-        id: 5,
-        lawyerName: 'Gunnar',
-        aboutInfo: 'Bombhot',
-        currentStatus: 'Inaktiv',
-        created: '2020-11-18 09:38',
-        modified: '2020-11-20 17:18',
-        active: true,
-      },
-    ],
+    whistles: [],
   }),
+  methods: {
+    fillTable() {
+      whistle.getAll(this.$store.getters.StateUserToken).then((response) => {
+        this.whistles = response;
+      });
+    },
+    updateWhistle(whistleToUpdate) {
+      whistle.update(this.$store.getters.StateUserToken, whistleToUpdate);
+    },
+    editStatus(input) {
+      this.updateWhistle(input);
+    },
+    openNotification(duration) {
+      // eslint-disable-next-line no-unused-vars
+      const noti = this.$vs.notification({
+        duration,
+        progress: 'auto',
+        sticky: true,
+        color: 'success',
+        content: NotificationHelper,
+      });
+    },
+  },
+  mounted() {
+    this.fillTable();
+  },
 };
 </script>
 

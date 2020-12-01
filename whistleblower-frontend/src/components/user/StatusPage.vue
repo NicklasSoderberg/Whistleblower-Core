@@ -7,7 +7,7 @@
 </vs-row>
 
     <vs-row justify="center" align="center">
-    <div class="form-body">
+    <div class="form-body ex1">
         <div class="form-group" >
             <h3>Ärende status</h3>
             <p> {{checkStatus}}</p>
@@ -55,12 +55,10 @@ export default {
 div.ex1 {
   text-align-last: left;
   width: 270px;
+  margin-top: 25px;
 }
 div.ex2 {
     text-align-last: center;
-}
-h1 {
-    margin-bottom: 40px;
 }
 .form-body {
     display: table;

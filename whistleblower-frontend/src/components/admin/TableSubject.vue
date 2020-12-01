@@ -6,11 +6,11 @@
         </template>
         <template #thead>
           <vs-tr>
-            <vs-th sort @click="subjects = $vs.sortData($event ,subjects, 'id')">
-              ID
+            <vs-th sort @click="subjects = $vs.sortData($event ,subjects, 'text')">
+              Ämne
             </vs-th>
-            <vs-th sort @click="subjects = $vs.sortData($event ,subjects, 'name')">
-              Subject
+            <vs-th sort @click="subjects = $vs.sortData($event ,subjects, 'active')">
+              Aktiv
             </vs-th>
           </vs-tr>
         </template>
@@ -21,104 +21,87 @@
             :data="tr"
             :is-selected="selected == tr"
           >
-            <vs-td>
-              {{ tr.id }}
+            <vs-td :key="tr.text">
+            {{ tr.text }}
             </vs-td>
-            <vs-td>
-            {{ tr.name }}
+            <vs-td edit @click="edit = tr, editActive = true" :key="tr.active">
+              <span v-if="tr.active">Visas</span>
+              <span v-else>Visas inte</span>
             </vs-td>
-            <template #expand>
-              <vs-row align="flex" justify="center">
-              <vs-button>
-                <i class="bx bxs-edit"></i>Redigera
-              </vs-button>
-              <vs-button danger @click="active=!active">
-                <i class="bx bxs-trash"></i>Ta bort
-              </vs-button>
-              </vs-row>
-            </template>
           </vs-tr>
         </template>
         <template #footer>
           <vs-pagination v-model="page" :length="$vs.getLength(subjects, max)" />
         </template>
       </vs-table>
-      <vs-dialog blur not-close v-model="active">
-        <DialogDelete :Name=selected.name></DialogDelete>
+      <vs-dialog blur not-close v-model="editActive">
+        <template #header>
+            <p v-if="edit.active">Är du säker du vill gömma ämnet "{{edit.text}}"?</p>
+            <p v-else>Är du säker du vill visa ämnet "{{edit.text}}"?</p>
+        </template>
         <vs-row type="flex" justify="center" align="center">
-         <vs-button flat @click="active=!active">Avbryt</vs-button>
-         <vs-button gradient primary @click="active=!active">
-           <i class="bx bxs-user-plus"></i>Delete</vs-button>
+          <vs-button gradient danger v-model="edit"
+                    @click="updateSubject(edit),
+                            openNotification(4000),
+                            editActive = !editActive">
+              Genomför
+          </vs-button>
+          <vs-button flat @click="editActive = !editActive">Avbryt</vs-button>
         </vs-row>
       </vs-dialog>
     </div>
 </template>
 
 <script>
-import DialogDelete from './DialogDelete.vue';
+import subject from '../../apicalls/subject';
+import NotificationHelper from './NotificationHelper.vue';
 
 export default {
-  components: { DialogDelete },
+  components: { },
   name: 'TableSubject',
   data: () => ({
     selected: { name: '' },
     active: false,
+    active2: false,
     search: '',
     page: 1,
-    max: 10,
-    subjects: [
-      {
-        id: 1,
-        name: 'Missbruk av urkund',
-        numberWhistles: '3',
-      },
-      {
-        id: 2,
-        name: 'Korruption',
-        numberWhistles: '8',
-      },
-      {
-        id: 3,
-        name: 'Mutor',
-        numberWhistles: '11',
-      },
-      {
-        id: 4,
-        name: 'Okänt',
-        numberWhistles: '35',
-      },
-      {
-        id: 5,
-        name: 'Penningtvätt',
-        numberWhistles: '45',
-      },
-      {
-        id: 6,
-        name: 'Terrorism',
-        numberWhistles: '25',
-      },
-      {
-        id: 7,
-        name: 'Olaga hot',
-        numberWhistles: '432',
-      },
-      {
-        id: 8,
-        name: 'Misstänksamheter',
-        numberWhistles: '5',
-      },
-      {
-        id: 9,
-        name: 'Oro för medarbetare',
-        numberWhistles: '1',
-      },
-      {
-        id: 10,
-        name: 'Beroendeställning',
-        numberWhistles: '37',
-      },
-    ],
+    max: 20,
+    subjects: [],
+    edit: '',
+    editActive: false,
   }),
+  methods: {
+    getOptions() {
+      subject.getAll().then((response) => {
+        this.subjects = response;
+      });
+    },
+    updateSubject(subjectToUpdate) {
+      subject.update(this.$store.getters.StateUserToken, {
+        active: !subjectToUpdate.active,
+        created: null,
+        deleted: null,
+        modified: null,
+        subjectID: subjectToUpdate.subjectID,
+        text: subjectToUpdate.text,
+      }).then(() => {
+        this.getOptions();
+      });
+    },
+    openNotification(duration) {
+      // eslint-disable-next-line no-unused-vars
+      const noti = this.$vs.notification({
+        duration,
+        progress: 'auto',
+        sticky: true,
+        color: 'success',
+        content: NotificationHelper,
+      });
+    },
+  },
+  mounted() {
+    this.getOptions();
+  },
 };
 </script>
 
@@ -132,5 +115,8 @@ export default {
 }
 .W100{
   width: 100%;
+}
+#deleteButton{
+  margin-top: 40px;
 }
 </style>

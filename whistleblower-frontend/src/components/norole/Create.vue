@@ -5,45 +5,48 @@
       <label id="top">Vad gäller ärendet?</label>
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
-      <select>
+      <select v-model="newWhistle.About" style="outline: none;">
         <option></option>
-        <option>Bedrägeri</option>
-        <option>Penningtvätt</option>
+        <option v-for="(option, index) in options" :key="index">
+          {{option.text}}
+        </option>
       </select>
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
       <label>När inträffa händelsen?</label>
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
-      <textarea name="" id="" cols="100" rows="7" placeholder=""></textarea>
+      <textarea name="" id="" cols="100" rows="7" placeholder=""
+                v-model="newWhistle.When"></textarea>
       </vs-row>
 
       <vs-row type="flex" justify="center" align="center">
       <label>Vart inträffade händelsen?</label>
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
-      <textarea name="" id="" cols="100" rows="7" placeholder=""></textarea>
+      <textarea name="" id="" cols="100" rows="7" placeholder=""
+                v-model="newWhistle.Where"></textarea>
       </vs-row>
 
       <vs-row type="flex" justify="center" align="center">
       <label>Detailjer om ärendet?</label>
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
-      <textarea name="" id="" cols="100" rows="7" placeholder=""></textarea>
+      <textarea name="" id="" cols="100" rows="7" placeholder=""
+                v-model="newWhistle.Description"></textarea>
       </vs-row>
 
       <vs-row type="flex" justify="center" align="center">
       <label>Är andra anställda medvetna om detta?</label>
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
-      <textarea name="" id="" cols="100" rows="7" placeholder=""></textarea>
+      <textarea name="" id="" cols="100" rows="7" placeholder=""
+                v-model="newWhistle.OtherEmployee"></textarea>
       </vs-row>
-
     </div>
     <vs-row type="flex" justify="center" align="center">
     <vs-button flat @click="active=!active">Nästa</vs-button>
     </vs-row>
-
     <vs-dialog blur not-close v-model="active">
       <vs-row type="flex" justify="center" align="center">
         <h2>Vill du skicka ärendet?</h2>
@@ -53,20 +56,59 @@
         </div>
       <vs-row type="flex" justify="center" align="center">
          <vs-button flat @click="active=!active">Avbryt</vs-button>
-         <vs-button gradient primary @click="active=!active">Skicka ärende</vs-button>
+         <vs-button gradient primary @click="active=!active,
+                    createWhistle()">Skicka ärende</vs-button>
       </vs-row>
       </vs-dialog>
   </div>
 </template>
 
 <script>
+import whistle from '../../apicalls/whistle';
+import subject from '../../apicalls/subject';
 
 export default {
   name: 'Create',
   data: () => ({
     value: '',
     active: false,
+    options: [],
+    newWhistle: {
+      about: '',
+      when: '',
+      where: '',
+      description: '',
+      otherEmployee: '',
+    },
   }),
+  methods: {
+    createWhistle() {
+      whistle.create({
+        whistleID: 0,
+        lawyerID: null,
+        userID: null,
+        aboutInfo: this.newWhistle.About,
+        whenInfo: this.newWhistle.When,
+        whereInfo: this.newWhistle.Where,
+        descriptionInfo: this.newWhistle.Description,
+        otherEmployeeInfo: this.newWhistle.otherEmployee,
+        currentStatus: 'Aktiv',
+        created: null,
+        modified: null,
+        deleted: null,
+        active: true,
+        removedAdminID: null,
+      });
+    },
+    getOptions() {
+      subject.getAllActive().then((response) => {
+        this.options = response;
+      });
+    },
+  },
+  mounted() {
+    this.getOptions();
+  },
 };
 </script>
 
@@ -98,6 +140,7 @@ textarea {
   -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+     outline: none;
 }
 select{
   margin-bottom: 25px;

@@ -3,47 +3,56 @@
 <body >
   <div class="grid">
           <h3 id="titlepos">Ange användarnamn och lösenord för att logga in</h3>
+     <form @submit.prevent="submit">
      <vs-row  justify="center" style="margin-bottom: 5px">
        <div justify="left" align="left">
-        <vs-input :state="stateUser" v-model="username" :placeholder="userPlaceholder">
+        <vs-input :state="stateUser" v-model="form.username" :placeholder="userPlaceholder">
           <template #icon>
             <i class='bx bx-user'></i>
           </template>
         </vs-input>
-       </div>
-</vs-row>
+        </div>
+        </vs-row>
 
-<vs-row justify="center" align="center">
-  <div justify="center" align="center">
-       <vs-input :state="statePass" type="password"
-        v-model="password" :placeholder="passPlaceholder">
+        <vs-row justify="center" align="center">
+        <div justify="center" align="center">
+        <vs-input :state="statePass" type="password"
+        v-model="form.password" :placeholder="passPlaceholder">
           <template #icon>
             <i class='bx bx-lock-open-alt'></i>
           </template>
-          <template #message-danger v-if="false">
-            <p>Capslock är på</p>
+          <template #message-danger v-if="wrongLogin">
+            <p>ID och lösenord stämmer inte.</p>
         </template>
         </vs-input>
-
         <vs-row justify="center" align="center">
-        <vs-button gradient primary @click="this.login">Logga in</vs-button>
-        </vs-row>
-  </div>
+        <vs-button gradient primary type="submit">Logga in</vs-button>
       </vs-row>
+      </div>
+      </vs-row>
+      </form>
   </div>
 </body>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
-  data: () => ({
-    username: '',
-    password: '',
-    active: 0,
-    userInput: true,
-    passInput: true,
-    caps: false,
-  }),
+  name: 'Login',
+  data() {
+    return {
+      form: {
+        username: '',
+        password: '',
+      },
+      active: 0,
+      userInput: true,
+      passInput: true,
+      caps: false,
+      wrongLogin: false,
+    };
+  },
   computed: {
     stateUser() {
       return this.userInput ? 'dark' : 'danger';
@@ -59,8 +68,32 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['LogIn']),
+    async submit() {
+      const User = { username: '', password: '' };
+      User.username = this.form.username;
+      User.password = this.form.password;
+      try {
+        await this.LogIn(User);
+        switch (this.$store.getters.StateUserRole) {
+          case 'Admin':
+            this.$router.push('admin');
+            break;
+          case 'Lawyer':
+            this.$router.push('whistlehandler');
+            break;
+          case 'User':
+            this.$router.push('reportstatus');
+            break;
+          default:
+            break;
+        }
+        this.showError = false;
+      } catch (error) {
+        this.showError = true;
+      }
+    },
     checkCapsLock() {
-      console.log('caps metod');
       const input = document.getElementById('username');
 
       input.addEventListener('keyup', (event) => {
@@ -72,23 +105,29 @@ export default {
       });
     },
     login() {
-      console.log('begin');
-      if (this.username !== '' && this.password !== '') {
+      if (this.form.username !== '' && this.form.password !== '') {
         this.passInput = true;
         this.userInput = true;
+        if (this.username === 'WhistleMock' && this.password === 'Test123') {
+          this.$router.push('ReportStatus');
+        } else {
+          this.wrongLogin = true;
+        }
       } else {
         console.log('no input begin');
-        if (this.username === '') {
+        if (this.form.username === '') {
           console.log('no usernamelogin');
           this.userInput = false;
         } else {
+          this.wrongLogin = false;
           this.userInput = true;
         }
 
-        if (this.password === '') {
+        if (this.form.password === '') {
           console.log('no passwordlogin');
           this.passInput = false;
         } else {
+          this.wrongLogin = false;
           this.passInput = true;
         }
       }
@@ -104,6 +143,7 @@ export default {
 }
 #titlepos {
   margin-top: 170px;
+  text-align: center;
 }
 
 </style>
