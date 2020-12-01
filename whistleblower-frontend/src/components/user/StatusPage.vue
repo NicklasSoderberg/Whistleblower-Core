@@ -94,4 +94,8 @@ div.ex2 {
 h2 {
     font-size: 17px;
 }
+h1 {
+    font-size: 27px;
+    margin-top: 50px;
+    }
 </style>
