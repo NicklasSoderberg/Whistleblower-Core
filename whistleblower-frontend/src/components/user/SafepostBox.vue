@@ -41,10 +41,14 @@
 </template>
 
 <script>
+import whistle from '../../apicalls/whistle';
+import conversations from '../../apicalls/conversation';
 
 export default {
   name: 'SafepostBox',
   data: () => ({
+    whistle: {},
+    conversation: [],
     active: false,
     disableButton: false,
     bobMessage: '',
@@ -77,7 +81,16 @@ export default {
   },
 
   methods: {
-
+    getConversations() {
+      whistle.getByUserId(this.$store.getters.StateUserToken,
+        this.$store.getters.StateUserId).then((response) => {
+        this.whistle = response;
+      });
+      conversations.getAll(this.$store.getters.StateUserToken,
+        this.whistle.whistleID).then((response) => {
+        this.conversation = response;
+      });
+    },
     sendMessage(direction) {
       if (!this.youMessage && !this.bobMessage) {
         return;
@@ -96,12 +109,13 @@ export default {
       const lastMsg = this.messages[i];
       if (lastMsg.author === 'you') {
         this.disableButton = true;
-        console.log('userlastcount true');
       } else {
-        console.log('userlastcount false');
         this.disableButton = false;
       }
     },
+  },
+  mounted() {
+    this.getConversations();
   },
 };
 </script>

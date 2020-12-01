@@ -45,7 +45,7 @@ namespace API.Data
 
         public async Task<Conversation[]> GetConversation(int WhistleID)
         {
-            IQueryable<Conversation> query = _context.Conversations.Where(c => c.WhistleID == WhistleID);
+            IQueryable<Conversation> query = _context.Conversations.Where(c => c.WhistleID == WhistleID).OrderBy(x => x.ConversationID);
             return await query.ToArrayAsync();
         }
 
