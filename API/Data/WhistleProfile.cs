@@ -17,6 +17,8 @@ namespace API.Data
             this.CreateMap<DtoConversation, Conversation>();
             this.CreateMap<File, DtoFile>();
             this.CreateMap<DtoFile, File>();
+            this.CreateMap<DtoLawyer, Lawyer>();
+            this.CreateMap<Lawyer, DtoLawyer>();
         }
     }
 }

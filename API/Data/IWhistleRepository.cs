@@ -20,10 +20,19 @@ namespace API.Data
         Task<Whistle[]> GetAllWhistles(bool getInActive = false);
         Task<Whistle> GetWhistle(int WhistleID);
 
+        Task<Whistle[]> GetLawyerWhistles(Guid LawyerId);
+
         // Conversation
         Task<Conversation[]> GetConversation(int WhistleID);
 
         // File
         Task<File[]> GetFiles(int WhistleID);
+
+        // Lawyer
+        Task<Lawyer[]> GetAllLawyers();
+
+        Task<Lawyer> PutLawyer(Lawyer Lawyer);
+
+        Task<Lawyer> GetLawyer(Guid LawyerId);
     }
 }
