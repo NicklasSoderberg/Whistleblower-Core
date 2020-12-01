@@ -34,5 +34,6 @@ namespace API.Data
         public DbSet<File> Files { get; set; }
         public DbSet<Whistle> Whistles { get; set; }
         public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Lawyer> Lawyers { get; set; }
     }
 }

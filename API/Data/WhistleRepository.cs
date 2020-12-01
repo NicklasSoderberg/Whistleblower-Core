@@ -43,6 +43,13 @@ namespace API.Data
             return await query.ToArrayAsync();
         }
 
+        public async Task<Whistle[]> GetLawyerWhistles(Guid LawyerId)
+        {
+            IQueryable<Whistle> query = _context.Whistles.Where(c => c.LawyerID == LawyerId);
+            return await query.ToArrayAsync();
+        }
+
+
         public async Task<Conversation[]> GetConversation(int WhistleID)
         {
             IQueryable<Conversation> query = _context.Conversations.Where(c => c.WhistleID == WhistleID);
@@ -84,6 +91,31 @@ namespace API.Data
         {
             IQueryable<Subject> query = _context.Subjects.Where(c => c.SubjectID == subjectID);
             return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Lawyer[]> GetAllLawyers()
+        {
+            IQueryable<Lawyer> query = _context.Lawyers.Where(l => l.LawyerId == l.LawyerId);
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Lawyer> PutLawyer(Lawyer Lawyer)
+        {
+            var lawyer = _context.Lawyers.Where(l => l.LawyerId == Lawyer.LawyerId).FirstOrDefault();
+            lawyer.LawyerId = Lawyer.LawyerId;
+            lawyer.LawyerName = Lawyer.LawyerName;
+            lawyer.Password = Lawyer.Password;
+            lawyer.Username = Lawyer.Username;
+            _context.SaveChanges();
+            return null;
+
+
+        }
+
+        public async Task<Lawyer> GetLawyer(Guid LawyerId)
+        {
+            var lawyer = _context.Lawyers.Where(l => l.LawyerId == LawyerId).FirstOrDefault();
+            return lawyer;
         }
     }
 }
