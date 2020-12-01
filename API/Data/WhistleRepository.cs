@@ -67,6 +67,31 @@ namespace API.Data
             IQueryable<File> query = _context.Files.Where(c => c.WhistleID == WhistleID);
             return await query.ToArrayAsync();
         }
+        public async Task<Whistle> GetUserWhistle(Guid userId)
+        {
+            IQueryable<Whistle> query = _context.Whistles.Where(c => c.UserID == userId);
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Subject[]> GetAllSubjects(bool getOnlyActive = false)
+        {
+            IQueryable<Subject> query;
+            if (!getOnlyActive)
+            {
+                query = _context.Subjects.Where(c => c.SubjectID == c.SubjectID);
+            }
+            else
+            {
+                query = _context.Subjects.Where(c => (c.SubjectID == c.SubjectID) && (c.Active == true));
+            }
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Subject> GetSubject(int subjectID)
+        {
+            IQueryable<Subject> query = _context.Subjects.Where(c => c.SubjectID == subjectID);
+            return await query.FirstOrDefaultAsync();
+        }
 
         public async Task<Lawyer[]> GetAllLawyers()
         {

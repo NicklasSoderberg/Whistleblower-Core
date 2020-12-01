@@ -130,5 +130,21 @@ namespace API.Controllers
             }
             return BadRequest();
         }
+
+        
+        [HttpGet()]
+        [Route("userId/{userId}")]
+        public async Task<ActionResult<DtoWhistle>> GetUser([FromRoute] Guid userId)
+        {
+            try
+            {
+                var userWhistle = await _repository.GetUserWhistle(userId);
+                return _mapper.Map<DtoWhistle>(userWhistle);
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
+        }
     }
 }

@@ -64,7 +64,7 @@
             <h3 v-if="editProp == 'currentStatus'">Ändra status</h3>
         </template>
         <vs-row type="flex" justify="center" align="center">
-        <vs-select @change="editActive = false, editStatus(edit)"
+        <vs-select @change="editActive = false, editStatus(edit), openNotification(4000)"
                     block v-if="editProp == 'currentStatus'"
                   placeholder="Select" v-model="edit[editProp]">
           <vs-option value="Aktiv">
@@ -102,6 +102,7 @@
 
 <script>
 import whistle from '../../apicalls/whistle';
+import NotificationHelper from './NotificationHelper.vue';
 
 export default {
   components: {},
@@ -128,6 +129,16 @@ export default {
     },
     editStatus(input) {
       this.updateWhistle(input);
+    },
+    openNotification(duration) {
+      // eslint-disable-next-line no-unused-vars
+      const noti = this.$vs.notification({
+        duration,
+        progress: 'auto',
+        sticky: true,
+        color: 'success',
+        content: NotificationHelper,
+      });
     },
   },
   mounted() {
