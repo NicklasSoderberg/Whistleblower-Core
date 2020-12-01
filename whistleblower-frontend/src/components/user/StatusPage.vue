@@ -9,28 +9,33 @@
     <vs-row justify="center" align="center">
     <div class="form-body ex1">
         <div class="form-group" >
-            <h3>Ärende status</h3>
-            <p> {{checkStatus}}</p>
+            <h2>Ärende status</h2>
+            <p> {{whistle.currentStatus}}</p>
         </div>
 
         <div class="form-group" >
-            <h3>Vad gäller ärendet?</h3>
-            <p>Mutor,korruption & förfalskning</p>
+            <h2>Vad gäller ärendet?</h2>
+            <p>{{whistle.aboutInfo}}</p>
         </div>
 
         <div class="form-group" >
-            <h3>Detaljer om ärendet</h3>
-            <p>Andre tvättade pengar med företagets ekonomi</p>
+            <h2>Detaljer om ärendet</h2>
+            <p>{{whistle.descriptionInfo}}</p>
         </div>
 
         <div class="form-group" >
-            <h3>När inträffade händelsen?</h3>
-            <p>2020-05-16</p>
+            <h2>Är andra anställda medvetna om detta</h2>
+            <p>{{whistle.otherEmployeeInfo}}</p>
         </div>
 
         <div class="form-group" >
-            <h3>Vart inträffade händelsen</h3>
-            <p>Newton yrkeshögskola i Malmö</p>
+            <h2>Vart inträffa händelsen</h2>
+            <p>{{whistle.whereInfo}}</p>
+        </div>
+
+        <div class="form-group" >
+            <h2>När inträffa händelsen</h2>
+            <p>{{whistle.whenInfo}}</p>
         </div>
     </div>
 </vs-row>
@@ -38,14 +43,30 @@
 </template>
 
 <script>
+import whistle from '../../apicalls/whistle';
+
 export default {
+
   data: () => ({
     isActive: false,
+    whistle: {},
   }),
   computed: {
     checkStatus() {
       return this.isActive ? 'Aktiv' : 'Hanteras';
     },
+  },
+  methods: {
+    getWhistle() {
+      whistle.getByUserId(this.$store.getters.StateUserToken,
+        this.$store.getters.StateUserId).then((response) => {
+        this.whistle = response;
+      });
+      console.log(this.whistle);
+    },
+  },
+  mounted() {
+    this.getWhistle();
   },
 };
 </script>
@@ -69,5 +90,8 @@ div.ex2 {
 .form-group {
     margin-bottom: 25px;
     width: auto;
+}
+h2 {
+    font-size: 17px;
 }
 </style>

@@ -7,6 +7,7 @@ const state = {
   user: null,
   role: null,
   token: null,
+  userId: null,
 };
 const loginConfig = {
   headers: {
@@ -18,6 +19,7 @@ const getters = {
   StateUser: (state) => state.user,
   StateUserRole: (state) => state.role,
   StateUserToken: (state) => state.token,
+  StateUserId: (state) => state.userId,
 };
 const actions = {
   async LogIn({ commit }, User) {
@@ -25,6 +27,7 @@ const actions = {
     await commit('setUser', User.username);
     await commit('setRole', res.data.role);
     await commit('setToken', res.data.token);
+    await commit('setUserId', res.data.userId);
   },
   async LogOut({ commit }) {
     const user = null;
@@ -40,6 +43,9 @@ const mutations = {
   },
   setToken(state, token) {
     state.token = token;
+  },
+  setUserId(state, userId) {
+    state.userId = userId;
   },
   LogOut(state) {
     state.user = null;
