@@ -4,10 +4,10 @@
       Välkommen till SafepostBox
     </h1>
 <section ref="chatArea" class="chat-area">
-<p v-for="message in messages"
-:key="message.name" class="message"
-:class="{ 'message-out': message.author === 'you', 'message-in': message.author !== 'you' }">
-      {{ message.body }}
+<p v-for="conversation in conversations"
+:key="conversation.conversationID" class="message"
+:class="{ 'message-out': conversation.sender === 1, 'message-in': conversation.sender !== 1 }">
+      {{ conversation.message }}
     </p>
 
   </section>
@@ -18,9 +18,10 @@
             meddelande till juristen.
           </h3>
         </template>
-      <form @submit.prevent="sendMessage('out')" id="person2-form"
+      <form @submit.prevent="sendMessage()" id="person2-form"
       style="width: 100%; height: 200px;">
-      <textarea v-model="youMessage" id="person2-input" type="text" placeholder="Type your message">
+      <textarea v-model="postMessage"
+      id="person2-input" type="text" placeholder="Type your message">
 
       </textarea>
 <vs-button type="submit" gradient primary @click="active=!active &&
@@ -41,34 +42,23 @@
 </template>
 
 <script>
+import whistle from '../../apicalls/whistle';
+import conversations from '../../apicalls/conversation';
 
 export default {
   name: 'SafepostBox',
   data: () => ({
+    whistle: {},
+    conversations: [],
     active: false,
     disableButton: false,
-    bobMessage: '',
-    youMessage: '',
     newMessage: false,
-    messages: [
-      {
-        body: 'Har du någon slags konkret bevis att Andre tvättar pengar?',
-        author: 'lawyer',
-      },
-      {
-        body: 'Ja jag har papper och dokument som bevisar det.',
-        author: 'you',
-      },
-      {
-        body: 'Vill du bifoga filerna och skicka dom.',
-        author: 'lawyer',
-      },
-    ],
+    postMessage: '',
   }),
   created() {
     // this.interval = setInterval(() => this.userLastCount(), 1000);
     // Todo call this method in another compontent
-    this.answerDisable();
+    // this.answerDisable();
   },
   computed: {
     canSendMsg() {
@@ -77,31 +67,60 @@ export default {
   },
 
   methods: {
-
-    sendMessage(direction) {
-      if (!this.youMessage && !this.bobMessage) {
-        return;
-      }
-      if (direction === 'out') {
-        this.messages.push({ body: this.youMessage, author: 'you' });
-        this.youMessage = '';
-        this.answerDisable();
-      } else if (direction === 'in') {
-        this.messages.push({ body: this.bobMessage, author: 'bob' });
-        this.bobMessage = '';
-      }
+    async createPostMessage() {
+      await conversations.postMessage(this.$store.getters.StateUserToken,
+        {
+          conversationID: 0,
+          message: this.postMessage,
+          whistleID: this.whistle.whistleID,
+          sender: 1,
+          sent: '1900-01-01T00:00:00',
+          read: '1900-01-01T00:00:00',
+          fileID: 2,
+        });
+      this.conversations.push({
+        conversationID: 0,
+        message: this.postMessage,
+        whistleID: this.whistle.whistleID,
+        sender: 1,
+        sent: '1900-01-01T00:00:00',
+        read: '1900-01-01T00:00:00',
+        fileID: 2,
+      });
+    },
+    async getWhistle() {
+      await whistle.getByUserId(this.$store.getters.StateUserToken,
+        this.$store.getters.StateUserId).then((response) => {
+        this.whistle = response;
+      });
+    },
+    async getConversations(whistleId) {
+      await conversations.getAll(this.$store.getters.StateUserToken,
+        whistleId).then((response) => {
+        this.conversations = response;
+      });
+      this.answerDisable();
+    },
+    async sendMessage() {
+      console.log('send button');
+      // this.answerDisable();
+      await this.createPostMessage();
+      this.answerDisable();
     },
     answerDisable() {
-      const i = this.messages.length - 1;
-      const lastMsg = this.messages[i];
-      if (lastMsg.author === 'you') {
+      const i = this.conversations.length - 1;
+      const lastMsg = this.conversations[i];
+      if (lastMsg.sender === 1) {
         this.disableButton = true;
-        console.log('userlastcount true');
       } else {
-        console.log('userlastcount false');
         this.disableButton = false;
       }
     },
+  },
+  async mounted() {
+    await this.getWhistle();
+    await this.getConversations(this.whistle.whistleID);
+    // this.interval = setInterval(() => this.getConversations(this.whistle.whistleID), 10000);
   },
 };
 </script>
@@ -187,5 +206,9 @@ width: 90px;
 }
 #person2-input {
   padding: .5em;
+}
+h1 {
+  font-size: 27px;
+  margin-top: 100px;
 }
 </style>
