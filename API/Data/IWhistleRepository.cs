@@ -19,6 +19,7 @@ namespace API.Data
         // Whislte
         Task<Whistle[]> GetAllWhistles(bool getInActive = false);
         Task<Whistle> GetWhistle(int WhistleID);
+        Task<Whistle> GetUserWhistle(Guid userId);
 
         // Conversation
         Task<Conversation[]> GetConversation(int WhistleID);

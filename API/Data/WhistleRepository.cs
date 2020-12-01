@@ -60,6 +60,9 @@ namespace API.Data
             IQueryable<File> query = _context.Files.Where(c => c.WhistleID == WhistleID);
             return await query.ToArrayAsync();
         }
+        public async Task<Whistle> GetUserWhistle(Guid userId)
+        {
+            IQueryable<Whistle> query = _context.Whistles.Where(c => c.UserID == userId);
 
         public async Task<Subject[]> GetAllSubjects(bool getOnlyActive = false)
         {

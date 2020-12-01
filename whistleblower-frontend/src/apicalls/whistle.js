@@ -13,14 +13,26 @@ const whistle = {
     });
     return responseData;
   },
-  create(input) {
-    axios.post('whistle', input, {
+  async create(input) {
+    await axios.post('whistle', input, {
       headers: {
         'Content-Type': 'application/json',
       },
     }).then((response) => {
       console.log(response.data);
     });
+  },
+  async getByUserId(token, userId) {
+    let responseData;
+    await axios.get(`whistle/userid/${userId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((response) => {
+      responseData = response.data;
+    });
+    return responseData;
   },
   async update(token, whistleToUpdate) {
     let responseData;
