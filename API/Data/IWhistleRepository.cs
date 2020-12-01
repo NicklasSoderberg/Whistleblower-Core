@@ -21,8 +21,6 @@ namespace API.Data
         Task<Whistle> GetWhistle(int WhistleID);
         Task<Whistle> GetUserWhistle(Guid userId);
 
-        Task<Whistle[]> GetLawyerWhistles(Guid LawyerId);
-
         // Conversation
         Task<Conversation[]> GetConversation(int WhistleID);
 
@@ -32,12 +30,5 @@ namespace API.Data
         // Subject
         Task<Subject[]> GetAllSubjects(bool getInActive = false);
         Task<Subject> GetSubject(int subjectID);
-
-        // Lawyer
-        Task<Lawyer[]> GetAllLawyers();
-
-        Task<Lawyer> PutLawyer(Lawyer Lawyer);
-
-        Task<Lawyer> GetLawyer(Guid LawyerId);
     }
 }

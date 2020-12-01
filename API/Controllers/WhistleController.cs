@@ -38,20 +38,6 @@ namespace API.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "");
             }
         }
-        [Authorize(Roles = "Admin,Lawyer")]
-        [HttpGet("Lawyer/{LawyerId}")]
-        public async Task<ActionResult<DtoWhistle[]>> GetLawyerWhistles(Guid LawyerId)
-        {
-            try
-            {
-                var result = await _repository.GetLawyerWhistles(LawyerId);
-                return _mapper.Map<DtoWhistle[]>(result);
-            }
-            catch
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "");
-            }
-        }
 
         [Authorize(Roles = "Admin,Lawyer")]
         [HttpGet("{whistleID}")]
