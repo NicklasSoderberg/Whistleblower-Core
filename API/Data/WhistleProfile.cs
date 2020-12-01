@@ -19,6 +19,8 @@ namespace API.Data
             this.CreateMap<DtoFile, File>();
             this.CreateMap<Subject, DtoSubject>();
             this.CreateMap<DtoSubject, Subject>();
+            this.CreateMap<DtoLawyer, Lawyer>();
+            this.CreateMap<Lawyer, DtoLawyer>();
         }
     }
 }
