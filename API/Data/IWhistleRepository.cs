@@ -26,5 +26,9 @@ namespace API.Data
 
         // File
         Task<File[]> GetFiles(int WhistleID);
+
+        // Subject
+        Task<Subject[]> GetAllSubjects(bool getInActive = false);
+        Task<Subject> GetSubject(int subjectID);
     }
 }
