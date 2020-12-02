@@ -16,7 +16,7 @@
       </vs-input>
       </vs-row>
       <vs-row justify="center">
-         <div class="error" v-if="!$v.value2.required" >Lösenordet måste vara ifyllt</div>
+         <div class="error danger" v-if="!$v.value2.required" >Lösenordet måste vara ifyllt</div>
       </vs-row>
       <vs-row id="space" type="flex" justify="center" align="center">
       <vs-button gradient primary>Följ upp ärende</vs-button>
