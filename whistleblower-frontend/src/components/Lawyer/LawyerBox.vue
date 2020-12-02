@@ -6,7 +6,7 @@
 <section ref="chatArea" class="chat-area">
 <p v-for="conversation in conversations"
 :key="conversation.conversationID" class="message"
-:class="{ 'message-out': conversation.sender === 1, 'message-in': conversation.sender !== 1 }">
+:class="{ 'message-out': conversation.sender === 0, 'message-in': conversation.sender !== 0 }">
       {{ conversation.message }}
     </p>
 
@@ -42,11 +42,10 @@
 </template>
 
 <script>
-import whistle from '../../apicalls/whistle';
 import conversations from '../../apicalls/conversation';
 
 export default {
-  name: 'SafepostBox',
+  name: 'lawyerBox',
   data: () => ({
     whistle: {},
     conversations: [],
@@ -55,6 +54,9 @@ export default {
     newMessage: false,
     postMessage: '',
   }),
+  props: {
+    whistleID: {},
+  },
   created() {
     // this.interval = setInterval(() => this.userLastCount(), 1000);
     // Todo call this method in another compontent
@@ -72,8 +74,8 @@ export default {
         {
           conversationID: 0,
           message: this.postMessage,
-          whistleID: this.whistle.whistleID,
-          sender: 1,
+          whistleID: this.whistleID,
+          sender: 0,
           sent: '1900-01-01T00:00:00',
           read: '1900-01-01T00:00:00',
           fileID: 2,
@@ -81,47 +83,26 @@ export default {
       this.conversations.push({
         conversationID: 0,
         message: this.postMessage,
-        whistleID: this.whistle.whistleID,
-        sender: 1,
+        whistleID: this.whistleID,
+        sender: 0,
         sent: '1900-01-01T00:00:00',
         read: '1900-01-01T00:00:00',
         fileID: 2,
       });
     },
-    async getWhistle() {
-      await whistle.getByUserId(this.$store.getters.StateUserToken,
-        this.$store.getters.StateUserId).then((response) => {
-        this.whistle = response;
-      });
-    },
-    async getConversations(whistleId) {
+    async getConversations() {
       await conversations.getAll(this.$store.getters.StateUserToken,
-        whistleId).then((response) => {
+        this.whistleID).then((response) => {
         this.conversations = response;
-        console.log(this.conversations);
       });
       this.answerDisable();
     },
     async sendMessage() {
-      console.log('send button');
-      // this.answerDisable();
       await this.createPostMessage();
-      this.answerDisable();
-    },
-    answerDisable() {
-      const i = this.conversations.length - 1;
-      const lastMsg = this.conversations[i];
-      if (lastMsg.sender === 1) {
-        this.disableButton = true;
-      } else {
-        this.disableButton = false;
-      }
     },
   },
   async mounted() {
-    await this.getWhistle();
-    await this.getConversations(this.whistle.whistleID);
-    // this.interval = setInterval(() => this.getConversations(this.whistle.whistleID), 10000);
+    await this.getConversations();
   },
 };
 </script>

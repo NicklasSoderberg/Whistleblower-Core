@@ -55,6 +55,7 @@
         >
           Mina ärende
         </vs-navbar-item>
+
       </template>
       <template v-else-if="userRole == 'Admin'">
         <vs-navbar-item
@@ -127,7 +128,11 @@ export default {
         this.newMessage = false;
       }
       this.$router.push(route);
+      console.log(this.$route.name);
+      console.log(this.curRoute);
       this.curRoute = this.$route.name;
+      console.log(this.$route.name);
+      console.log(this.curRoute);
     },
     ...mapActions(['LogOut']),
     async LogOutUser() {
@@ -142,9 +147,6 @@ export default {
     async logout() {
       await this.$store.dispatch('LogOut');
       this.$router.push('Login');
-    },
-    emitNewMsg() {
-      this.$root.$emit('userLastCount'); // like this
     },
   },
   name: 'Navigation',
