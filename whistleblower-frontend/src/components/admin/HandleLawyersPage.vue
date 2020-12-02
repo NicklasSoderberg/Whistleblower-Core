@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import { required } from 'vuelidate/lib/validators';
+import { required, email } from 'vuelidate/lib/validators';
 import lawyer from '../../apicalls/lawyer';
 import TableLawyer from './TableLawyer.vue';
 
@@ -111,14 +111,12 @@ export default {
   components: { TableLawyer },
   name: 'HandleLawyersPage',
   data: () => ({
-
     username: '',
     password: '',
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
-
     active: false,
   }),
   validations: {
@@ -136,22 +134,27 @@ export default {
     },
     email: {
       required,
+      email,
     },
-    phone: {
-      required,
-    },
-
   },
   methods: {
     async createNewLawyer() {
+      const newlawyer = {
+        username: this.username,
+        password: this.password,
+        firstName: this.firstName,
+        lastName: this.lastName,
+        email: this.email,
+        phone: this.phone,
+      };
       await lawyer.create(this.$store.getters.StateUserToken,
         {
-          username: this.username,
-          password: this.password,
-          firstName: this.firstName,
-          lastName: this.lastName,
-          email: this.email,
-          phone: this.phone,
+          username: newlawyer.username,
+          password: newlawyer.password,
+          firstName: newlawyer.firstName,
+          lastName: newlawyer.lastName,
+          email: newlawyer.email,
+          phone: newlawyer.phone,
         });
     },
   },
