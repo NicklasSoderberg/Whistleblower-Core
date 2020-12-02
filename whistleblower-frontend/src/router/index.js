@@ -26,6 +26,7 @@ const routes = [{
   path: '/',
   name: 'HomePage',
   component: HomePage,
+  meta: { guest: true },
 },
 {
   path: '/create',
