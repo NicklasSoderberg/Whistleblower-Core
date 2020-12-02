@@ -117,10 +117,10 @@ namespace API.Controllers
             return BadRequest();
         }
 
-        
+        [Authorize(Roles = "User")]
         [HttpGet()]
         [Route("userId/{userId}")]
-        public async Task<ActionResult<DtoWhistle>> GetUser([FromRoute] Guid userId)
+        public async Task<ActionResult<DtoWhistle>> GetUserWhistle([FromRoute] Guid userId)
         {
             try
             {
@@ -130,6 +130,21 @@ namespace API.Controllers
             catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
+        }
+
+        //[Authorize(Roles = "Lawyer")]
+        [HttpGet("Lawyer/{LawyerId}")]
+        public async Task<ActionResult<DtoWhistle[]>> GetLawyerWhistles(Guid LawyerId)
+        {
+            try
+            {
+                var result = await _repository.GetLawyerWhistles(LawyerId);
+                return _mapper.Map<DtoWhistle[]>(result);
+            }
+            catch
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "");
             }
         }
     }

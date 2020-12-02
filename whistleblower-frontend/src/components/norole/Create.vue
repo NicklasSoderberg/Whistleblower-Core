@@ -98,6 +98,7 @@ export default {
         deleted: null,
         active: true,
         removedAdminID: null,
+        lastSender: -1,
       });
     },
     getOptions() {

@@ -21,5 +21,6 @@ namespace API.Data.Entities
         public System.DateTime? Deleted { get; set; }
         public bool Active { get; set; }
         public Guid? RemovedAdminID { get; set; }
+        public int LastSender { get; set; }
     }
 }

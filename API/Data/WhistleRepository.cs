@@ -85,5 +85,11 @@ namespace API.Data
             IQueryable<Subject> query = _context.Subjects.Where(c => c.SubjectID == subjectID);
             return await query.FirstOrDefaultAsync();
         }
+
+        public async Task<Whistle[]> GetLawyerWhistles(Guid LawyerId)
+        {
+            IQueryable<Whistle> query = _context.Whistles.Where(c => c.LawyerID == LawyerId);
+            return await query.ToArrayAsync();
+        }
     }
 }

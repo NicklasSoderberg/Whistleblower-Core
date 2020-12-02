@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API.Data;
 using API.Data.Entities;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

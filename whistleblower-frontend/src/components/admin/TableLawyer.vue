@@ -6,13 +6,16 @@
         </template>
         <template #thead>
           <vs-tr>
-            <vs-th sort @click="users = $vs.sortData($event ,users, 'name')">
-              Fullname
+            <vs-th sort @click="lawyers = $vs.sortData($event ,lawyers, 'firstname')">
+              Förnamn
             </vs-th>
-            <vs-th sort @click="users = $vs.sortData($event ,users, 'email')">
+            <vs-th sort @click="lawyers = $vs.sortData($event ,lawyers, 'lastname')">
+              Efternamn
+            </vs-th>
+            <vs-th sort @click="lawyers = $vs.sortData($event ,lawyers, 'email')">
               Email
             </vs-th>
-            <vs-th sort @click="users = $vs.sortData($event ,users, 'phonenumber')">
+            <vs-th sort @click="lawyers = $vs.sortData($event ,lawyers, 'phonenumber')">
               Phonenumber
             </vs-th>
           </vs-tr>
@@ -20,61 +23,35 @@
         <template #tbody>
           <vs-tr
             :key="i"
-            v-for="(tr, i) in $vs.getPage($vs.getSearch(users, search), page, max)"
+            v-for="(tr, i) in $vs.getPage($vs.getSearch(lawyers, search), page, max)"
             :data="tr"
             :is-selected="selected == tr"
           >
             <vs-td>
-              {{ tr.name }}
+              {{ tr.firstName }}
+            </vs-td>
+            <vs-td>
+              {{ tr.lastName }}
             </vs-td>
             <vs-td>
             {{ tr.email }}
             </vs-td>
             <vs-td>
-            {{ tr.phonenumber }}
+            {{ tr.phoneNumber }}
             </vs-td>
-            <template #expand>
-              <vs-row align="flex" justify="center">
-              <vs-button @click="active2 =! active2">
-                <i class="bx bxs-edit"></i>Redigera
-              </vs-button>
-              <vs-button danger @click="active=!active">
-                <i class="bx bxs-trash"></i>Ta bort
-              </vs-button>
-              </vs-row>
-            </template>
           </vs-tr>
         </template>
         <template #footer>
-          <vs-pagination v-model="page" :length="$vs.getLength(users, max)" />
+          <vs-pagination v-model="page" :length="$vs.getLength(lawyers, max)" />
         </template>
       </vs-table>
-      <vs-dialog blur not-close v-model="active">
-        <DialogDelete :Name=selected.name></DialogDelete>
-        <vs-row type="flex" justify="center" align="center">
-         <vs-button flat @click="active=!active">Avbryt</vs-button>
-         <vs-button gradient primary @click="active=!active">
-           <i class="bx bxs-user-plus"></i>Ta bort</vs-button>
-        </vs-row>
-      </vs-dialog>
-      <vs-dialog blur not-close v-model="active2">
-        <DialogEdit :Name=selected.name :Email=selected.email
-        :pNumber=selected.phonenumber></DialogEdit>
-        <vs-row type="flex" justify="center" align="center">
-        <vs-button flat @click="active2=!active2">Avbryt</vs-button>
-         <vs-button gradient primary @click="active2=!active2">
-           <i class="bx bxs-save"></i>Spara</vs-button>
-        </vs-row>
-      </vs-dialog>
     </div>
 </template>
 
 <script>
-import DialogDelete from './DialogDelete.vue';
-import DialogEdit from './DialogEditLawyer.vue';
+import lawyer from '../../apicalls/lawyer';
 
 export default {
-  components: { DialogDelete, DialogEdit },
   name: 'TableLawyer',
   data: () => ({
     selected: { name: '' },
@@ -83,135 +60,22 @@ export default {
     search: '',
     page: 1,
     max: 10,
-    users: [
-      {
-        id: 1,
-        name: 'Leanne Graham',
-        username: 'Bret',
-        email: 'Sincere@april.biz',
-        phonenumber: 'hildegard.org',
-      },
-      {
-        id: 2,
-        name: 'Ervin Howell',
-        username: 'Antonette',
-        email: 'Shanna@melissa.tv',
-        phonenumber: 'anastasia.net',
-      },
-      {
-        id: 3,
-        name: 'Clementine Bauch',
-        username: 'Samantha',
-        email: 'Nathan@yesenia.net',
-        phonenumber: 'ramiro.info',
-      },
-      {
-        id: 4,
-        name: 'Patricia Lebsack',
-        username: 'Karianne',
-        email: 'Julianne.OConner@kory.org',
-        phonenumber: 'kale.biz',
-      },
-      {
-        id: 5,
-        name: 'Chelsey Dietrich',
-        username: 'Kamren',
-        email: 'Lucio_Hettinger@annie.ca',
-        phonenumber: 'demarco.info',
-      },
-      {
-        id: 6,
-        name: 'Mrs. Dennis Schulist',
-        username: 'Leopoldo_Corkery',
-        email: 'Karley_Dach@jasper.info',
-        phonenumber: 'ola.org',
-      },
-      {
-        id: 7,
-        name: 'Kurtis Weissnat',
-        username: 'Elwyn.Skiles',
-        email: 'Telly.Hoeger@billy.biz',
-        phonenumber: 'elvis.io',
-      },
-      {
-        id: 8,
-        name: 'Nicholas Runolfsdottir V',
-        username: 'Maxime_Nienow',
-        email: 'Sherwood@rosamond.me',
-        phonenumber: 'jacynthe.com',
-      },
-      {
-        id: 9,
-        name: 'Glenna Reichert',
-        username: 'Delphine',
-        email: 'Chaim_McDermott@dana.io',
-        phonenumber: 'conrad.com',
-      },
-      {
-        id: 10,
-        name: 'Clementina DuBuque',
-        username: 'Moriah.Stanton',
-        email: 'Rey.Padberg@karina.biz',
-        phonenumber: 'ambrose.net',
-      },
-      {
-        id: 3,
-        name: 'Clementine Bauch',
-        username: 'Samantha',
-        email: 'Nathan@yesenia.net',
-        phonenumber: 'ramiro.info',
-      },
-      {
-        id: 4,
-        name: 'Patricia Lebsack',
-        username: 'Karianne',
-        email: 'Julianne.OConner@kory.org',
-        phonenumber: 'kale.biz',
-      },
-      {
-        id: 5,
-        name: 'Chelsey Dietrich',
-        username: 'Kamren',
-        email: 'Lucio_Hettinger@annie.ca',
-        phonenumber: 'demarco.info',
-      },
-      {
-        id: 6,
-        name: 'Mrs. Dennis Schulist',
-        username: 'Leopoldo_Corkery',
-        email: 'Karley_Dach@jasper.info',
-        phonenumber: 'ola.org',
-      },
-      {
-        id: 7,
-        name: 'Kurtis Weissnat',
-        username: 'Elwyn.Skiles',
-        email: 'Telly.Hoeger@billy.biz',
-        phonenumber: 'elvis.io',
-      },
-      {
-        id: 8,
-        name: 'Nicholas Runolfsdottir V',
-        username: 'Maxime_Nienow',
-        email: 'Sherwood@rosamond.me',
-        phonenumber: 'jacynthe.com',
-      },
-      {
-        id: 9,
-        name: 'Glenna Reichert',
-        username: 'Delphine',
-        email: 'Chaim_McDermott@dana.io',
-        phonenumber: 'conrad.com',
-      },
-      {
-        id: 10,
-        name: 'Clementina DuBuque',
-        username: 'Moriah.Stanton',
-        email: 'Rey.Padberg@karina.biz',
-        phonenumber: 'ambrose.net',
-      },
-    ],
+    lawyers: [],
   }),
+  methods: {
+    async fillTable() {
+      const loading = this.$vs.loading();
+      setTimeout(() => {
+        lawyer.getAll(this.$store.getters.StateUserToken).then((response) => {
+          this.lawyers = response;
+          loading.close();
+        });
+      }, 1000);
+    },
+  },
+  mounted() {
+    this.fillTable();
+  },
 };
 </script>
 
