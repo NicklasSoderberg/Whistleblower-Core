@@ -3,11 +3,13 @@ import Vuesax from 'vuesax';
 import 'vuesax/dist/vuesax.css';
 import 'material-icons/iconfont/material-icons.css';
 import 'boxicons/css/boxicons.min.css';
-
+import Vuelidate from 'vuelidate';
 import axios from 'axios';
 import App from './App.vue';
 import store from './store';
 import router from './router';
+
+Vue.use(Vuelidate);
 
 // axios.defaults.withCredentials = true;
 axios.defaults.baseURL = 'https://localhost:44338/api/';
