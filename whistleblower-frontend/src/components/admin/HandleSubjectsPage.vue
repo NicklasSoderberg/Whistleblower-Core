@@ -19,6 +19,9 @@
             <vs-row type="flex" justify="center" align="center">
               <vs-input label="Visningsnamn" v-model="subjectName"> </vs-input>
             </vs-row>
+              <vs-row justify="center">
+         <div class="error" v-if="!$v.subjectName.required" >Namnet måste vara ifyllt</div>
+      </vs-row>
           </div>
         </div>
         <div id="space">
@@ -35,6 +38,7 @@
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators';
 import TableSubject from './TableSubject.vue';
 import subject from '../../apicalls/subject';
 
@@ -45,6 +49,11 @@ export default {
     active: false,
     subjectName: '',
   }),
+  validations: {
+    subjectName: {
+      required,
+    },
+  },
   methods: {
     createSubject() {
       subject.create(this.$store.getters.StateUserToken, {

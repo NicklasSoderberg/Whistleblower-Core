@@ -56,6 +56,8 @@
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
+import { required } from 'vuelidate/lib/validators';
 
 export default {
   name: 'DialogAddLawyer',
