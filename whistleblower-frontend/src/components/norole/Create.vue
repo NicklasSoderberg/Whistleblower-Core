@@ -71,6 +71,8 @@ export default {
   name: 'Create',
   data: () => ({
     value: '',
+    createdUser: {
+    },
     active: false,
     options: [],
     newWhistle: {
@@ -82,11 +84,14 @@ export default {
     },
   }),
   methods: {
-    createWhistle() {
-      whistle.create({
+    async createWhistle() {
+      await whistle.createUser().then((response) => {
+        this.createdUser = response;
+      });
+      await whistle.create({
         whistleID: 0,
         lawyerID: null,
-        userID: null,
+        userID: this.createdUser.userId,
         aboutInfo: this.newWhistle.About,
         whenInfo: this.newWhistle.When,
         whereInfo: this.newWhistle.Where,

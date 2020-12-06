@@ -46,6 +46,17 @@ const whistle = {
     });
     return responseData;
   },
+  async createUser() {
+    let responeData;
+    await axios.post('Authenticate/registerUser', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      responeData = response.data;
+    });
+    return responeData;
+  },
 };
 
 export default whistle;
