@@ -47,18 +47,47 @@
     <vs-row type="flex" justify="center" align="center">
     <vs-button flat @click="active=!active">Nästa</vs-button>
     </vs-row>
-    <vs-dialog blur not-close v-model="active">
+
+    <vs-dialog blur not-close overflow-hidden v-model="active" prevent-close>
       <vs-row type="flex" justify="center" align="center">
-        <h2>Vill du skicka ärendet?</h2>
+            <h2>Vill du skicka ärendet?</h2>
       </vs-row>
-        <div class="con-form">
+        <div class="con-content">
           <h4>Du kan inte redigera ditt ärende förrens du fått svar från oss.</h4>
         </div>
-      <vs-row type="flex" justify="center" align="center">
+          <vs-row type="flex" justify="center" align="center">
          <vs-button flat @click="active=!active">Avbryt</vs-button>
-         <vs-button gradient primary @click="active=!active,
+         <vs-button gradient primary @click="active2=!active2, active=!active,
                     createWhistle()">Skicka ärende</vs-button>
       </vs-row>
+      </vs-dialog>
+      <vs-dialog v-model="active2" blur not-close prevent-close>
+        <template #header>
+          <h4>
+            Ditt ärende är nu inskickat.
+          </h4>
+        </template>
+        <h2 style="font-weight: normal; font-size: 20px; word-wrap: break-word;">
+            Detta är dina kontouppgifter du kommer logga in med för att följa ärendet.
+           <b style="color: red">OBS du kommer inte kunna få tag på uppgifterna igen
+           så se till att skriva ner de och spara de.</b>
+           </h2>
+        <div class="con-form">
+          <h2 style="font-weight: normal; font-size: 22px">
+            Användarnamn: <b>{{createdUser.username}}
+              </b></h2>
+          <h2 style="font-weight: normal; font-size: 22px">
+            Lösenord: <b>{{createdUser.password}}
+              </b></h2>
+        </div>
+
+        <template #footer>
+          <div class="footer-dialog">
+            <vs-button block @click="navigateLogin()">
+              Gå till första sidan.
+            </vs-button>
+          </div>
+        </template>
       </vs-dialog>
   </div>
 </template>
@@ -74,6 +103,7 @@ export default {
     createdUser: {
     },
     active: false,
+    active2: false,
     options: [],
     newWhistle: {
       about: '',
@@ -105,6 +135,9 @@ export default {
         removedAdminID: null,
         lastSender: -1,
       });
+    },
+    navigateLogin() {
+      this.$router.push('Login');
     },
     getOptions() {
       subject.getAllActive().then((response) => {

@@ -79,19 +79,19 @@ namespace JWTAuthentication.Controllers
         [Route("registerUser")]
         public async Task<IActionResult> registerUser()
         {
-            var username = await AutoGenerateID(false);
-            var password = await AutoGenerateID(true);
+            var generatedUsername = await AutoGenerateID(false);
+            var generatedPassword = await AutoGenerateID(true);
 
-            var userExists = await userManager.FindByNameAsync(username.Value);
+            var userExists = await userManager.FindByNameAsync(generatedUsername.Value);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
 
             AppUser user = new AppUser()
             {
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = username.Value
+                UserName = generatedUsername.Value
             };
-            var result = await userManager.CreateAsync(user, password.Value);
+            var result = await userManager.CreateAsync(user, generatedPassword.Value);
 
             if (!await roleManager.RoleExistsAsync("User"))
                 await roleManager.CreateAsync(new IdentityRole("User"));
@@ -102,9 +102,14 @@ namespace JWTAuthentication.Controllers
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
-            var returnUserId = await userManager.FindByNameAsync(username.Value);
+            var returnUserId = await userManager.FindByNameAsync(generatedUsername.Value);
 
-            return Ok(new {userId = returnUserId.Id  });
+            return Ok(new
+            {
+                userId = returnUserId.Id,
+                username = generatedUsername.Value,
+                password = generatedPassword.Value
+            }) ;
         }
 
         [Authorize(Roles = "Admin")]
