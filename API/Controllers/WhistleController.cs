@@ -147,8 +147,8 @@ namespace API.Controllers
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "");
             }
-        }
-
+        }        
+        
         [HttpPatch("{whistileID}")]
         public async Task<IActionResult> PatchWhistle(int whistleID, List<PatchDto> patchDtos)
         {

@@ -14,6 +14,9 @@ using API.Authentication;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using API.Data.Entities;
+using System.Net.Http;
+using System.Net;
+using System.Net.Http.Headers;
 
 namespace JWTAuthentication.Controllers
 {
@@ -74,18 +77,21 @@ namespace JWTAuthentication.Controllers
 
         [HttpPost]
         [Route("registerUser")]
-        public async Task<IActionResult> registerUser([FromBody] RegisterModel model)
+        public async Task<IActionResult> registerUser()
         {
-            var userExists = await userManager.FindByNameAsync(model.Username);
+            var generatedUsername = await AutoGenerateID(false);
+            var generatedPassword = await AutoGenerateID(true);
+
+            var userExists = await userManager.FindByNameAsync(generatedUsername.Value);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
 
             AppUser user = new AppUser()
             {
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username
+                UserName = generatedUsername.Value
             };
-            var result = await userManager.CreateAsync(user, model.Password);
+            var result = await userManager.CreateAsync(user, generatedPassword.Value);
 
             if (!await roleManager.RoleExistsAsync("User"))
                 await roleManager.CreateAsync(new IdentityRole("User"));
@@ -96,7 +102,14 @@ namespace JWTAuthentication.Controllers
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
-            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+            var returnUserId = await userManager.FindByNameAsync(generatedUsername.Value);
+
+            return Ok(new
+            {
+                userId = returnUserId.Id,
+                username = generatedUsername.Value,
+                password = generatedPassword.Value
+            }) ;
         }
 
         [Authorize(Roles = "Admin")]
@@ -150,6 +163,36 @@ namespace JWTAuthentication.Controllers
                     PhoneNumber = l.PhoneNumber
                 });
             return Ok(AllLawyers);
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<ActionResult<string>> AutoGenerateID(bool isPassword)
+        {
+            Random r = new Random();
+            string generatedID = "";
+            for (int i = 0; i < 9; i++)
+            {
+                if (i == 3 || i == 4 || i == 8)
+                {
+                    char c = Convert.ToChar(r.Next(65, 90));
+                    generatedID += c;
+                }
+                else
+                {
+                    generatedID += r.Next(0, 9).ToString();
+                }
+            }
+
+            if (!isPassword)
+            {
+                var userExists = await userManager.FindByNameAsync(generatedID);
+                    if (userExists != null)
+                    {
+                        await AutoGenerateID(false);
+                    }
+            }
+
+            return new ActionResult<string>(generatedID);            
         }
     }
 }
