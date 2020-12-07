@@ -100,7 +100,7 @@
         <vs-button @click="active=false" >
               Stäng
             </vs-button>
-            <vs-button v-on:click="RouteClick('SafepostBox')" >
+            <vs-button v-on:click="RouteClick()" >
               Safebox
             </vs-button>
       </vs-row>
@@ -133,8 +133,10 @@ export default {
     whistles: [{ aboutInfo: '' }], // Är den tom & bindad snear tabellen
   }),
   methods: {
-    RouteClick(route) {
-      this.$router.push(route);
+    RouteClick() {
+      // this.$router.push(route, params({ this.selected.whistleID});
+
+      this.$router.push({ path: 'inbox', name: 'lawyerBox', params: { whistleID: this.selected.whistleID } });
     },
     openNotification(duration) {
       // eslint-disable-next-line no-unused-vars

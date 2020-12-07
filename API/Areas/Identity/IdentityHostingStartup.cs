@@ -24,10 +24,18 @@ namespace API.Areas.Identity
                 services.AddIdentity<AppUser, IdentityRole>(options =>
                 {
                     options.User.RequireUniqueEmail = false;
-                })
+                })                
                 .AddEntityFrameworkStores<IdentityContext>()
                 .AddDefaultTokenProviders();
-            });
+                services.Configure<IdentityOptions>(options =>
+                {
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequiredLength = 6;
+                    options.Password.RequiredUniqueChars = 0;
+                });
+            });            
         }
     }
 }
