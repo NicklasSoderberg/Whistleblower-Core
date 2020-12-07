@@ -8,6 +8,7 @@ using API.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -149,13 +150,15 @@ namespace API.Controllers
             }
         }        
         
-        [HttpPatch("{whistileID}")]
-        public async Task<IActionResult> PatchWhistle(int whistleID, List<PatchDto> patchDtos)
+        [HttpPatch("{whistleID}")]
+        public async Task<IActionResult> Update(int whistleID, [FromBody] List<PatchDto> patchDtos)
         {
-            //patchDtos {
-                
-            //};                                           TODO ADD PATCH FOR WHISTLE
-            //_repository.ApplyPatchAsync()
+            var findWhistle = await _repository.GetWhistle(whistleID);
+            if (findWhistle != null)
+            {
+                await _repository.ApplyPatchAsync(findWhistle, patchDtos);
+                return Ok();
+            }
             return BadRequest();
         }
     }

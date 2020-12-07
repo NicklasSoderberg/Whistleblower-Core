@@ -1,4 +1,5 @@
 ﻿using API.Data.Entities;
+using API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace API.Data
         // General
         void Add<T>(T entity) where T : class;
         void Delete<T>(T entity) where T : class;
+        Task ApplyPatchAsync<T>(T entity, List<PatchDto> patchDtos) where T : class;
         Task<bool> SaveChangesAsync();
 
         // User

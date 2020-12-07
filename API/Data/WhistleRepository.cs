@@ -1,4 +1,5 @@
 ﻿using API.Data.Entities;
+using API.Models;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -31,6 +32,15 @@ namespace API.Data
         public void Delete<T>(T entity) where T : class
         {
             _context.Remove(entity);
+        }
+        public async Task ApplyPatchAsync<T>(T entity, List<PatchDto> patchDtos) where T : class
+        {
+            var nameValuePairProperties = patchDtos.ToDictionary(a => a.PropertyName, a => a.PropertyValue);
+
+            var dbEntityEntry = _context.Entry(entity);
+            dbEntityEntry.CurrentValues.SetValues(nameValuePairProperties);
+            dbEntityEntry.State = EntityState.Modified;
+            var result = await _context.SaveChangesAsync();
         }
         public async Task<bool> SaveChangesAsync()
         {
@@ -90,6 +100,6 @@ namespace API.Data
         {
             IQueryable<Whistle> query = _context.Whistles.Where(c => c.LawyerID == LawyerId);
             return await query.ToArrayAsync();
-        }
+        }       
     }
 }
