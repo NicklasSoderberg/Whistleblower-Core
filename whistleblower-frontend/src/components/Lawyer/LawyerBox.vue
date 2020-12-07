@@ -43,6 +43,7 @@
 
 <script>
 import conversations from '../../apicalls/conversation';
+import whistle from '../../apicalls/whistle';
 
 export default {
   name: 'lawyerBox',
@@ -53,6 +54,7 @@ export default {
     disableButton: false,
     newMessage: false,
     postMessage: '',
+    updateWhistle: {},
   }),
   props: {
     whistleID: {},
@@ -69,6 +71,11 @@ export default {
   },
 
   methods: {
+    async UpdateSender() {
+      console.log(this.whistle);
+      await whistle.updateLastSender(this.$store.getters.StateUserToken,
+        this.whistleID, this.whistle);
+    },
     async createPostMessage() {
       await conversations.postMessage(this.$store.getters.StateUserToken,
         {
@@ -97,8 +104,12 @@ export default {
       });
       this.answerDisable();
     },
+    async getWhistle() {
+      await whistle.getWhistle();
+    },
     async sendMessage() {
       await this.createPostMessage();
+      this.UpdateSender();
     },
   },
   async mounted() {

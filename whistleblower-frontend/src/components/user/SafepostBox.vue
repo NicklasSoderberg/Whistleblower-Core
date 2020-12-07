@@ -67,6 +67,10 @@ export default {
   },
 
   methods: {
+    async UpdateSender() {
+      console.log(this.whistle.whistleID);
+      await whistle.updateLastSender(this.$store.getters.StateUserToken, this.whistle.whistleID, 1);
+    },
     async createPostMessage() {
       await conversations.postMessage(this.$store.getters.StateUserToken,
         {
@@ -106,6 +110,7 @@ export default {
       console.log('send button');
       // this.answerDisable();
       await this.createPostMessage();
+      this.UpdateSender();
       this.answerDisable();
     },
     answerDisable() {

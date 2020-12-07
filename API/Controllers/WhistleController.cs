@@ -149,13 +149,24 @@ namespace API.Controllers
             }
         }        
         
-        [HttpPatch("{whistileID}")]
-        public async Task<IActionResult> PatchWhistle(int whistleID, List<PatchDto> patchDtos)
+        [HttpPut("update/{whistleID}")]
+        public async Task<ActionResult<DtoWhistle>> PutWhistle(int whistleID, DtoWhistle WhistleInput)
         {
-            //patchDtos {
-                
-            //};                                           TODO ADD PATCH FOR WHISTLE
-            //_repository.ApplyPatchAsync()
+            try
+            {
+                var oldWhistle = await _repository.GetWhistle(whistleID);
+                if (oldWhistle == null)
+                    return NotFound("");
+                _mapper.Map(WhistleInput, oldWhistle);
+                if (await _repository.SaveChangesAsync())
+                {
+                    return _mapper.Map<DtoWhistle>(oldWhistle);
+                }
+            }
+            catch
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "");
+            }
             return BadRequest();
         }
     }

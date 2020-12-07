@@ -57,6 +57,18 @@ const whistle = {
     });
     return responeData;
   },
+  async updateLastSender(token, whistleID, whistleInput) {
+    let responseData;
+    await axios.put(`Whistle/update/${whistleID}`, whistleInput, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((response) => {
+      responseData = response.data;
+    });
+    return responseData;
+  },
 };
 
 export default whistle;
