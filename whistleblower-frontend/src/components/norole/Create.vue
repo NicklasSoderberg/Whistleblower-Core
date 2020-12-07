@@ -12,6 +12,10 @@
         </option>
       </select>
       </vs-row>
+      <vs-row>
+        <div class="error" v-if="!$v.About.required" >
+           Emailen måste vara ifyllt</div>
+      </vs-row>
       <vs-row type="flex" justify="center" align="center">
       <label>När inträffa händelsen?</label>
       </vs-row>
@@ -64,6 +68,7 @@
 </template>
 
 <script>
+import { required, maxLength } from 'vuelidate/lib/validators';
 import whistle from '../../apicalls/whistle';
 import subject from '../../apicalls/subject';
 
@@ -81,6 +86,29 @@ export default {
       otherEmployee: '',
     },
   }),
+  validations: {
+    about: {
+      required,
+      maxLength: maxLength(280),
+    },
+    when: {
+      required,
+      maxLength: maxLength(280),
+    },
+    where: {
+      required,
+      maxLength: maxLength(280),
+    },
+    description: {
+      required,
+      maxLength: maxLength(280),
+    },
+    otherEmployee: {
+      required,
+      maxLength: maxLength(280),
+    },
+
+  },
   methods: {
     createWhistle() {
       whistle.create({
