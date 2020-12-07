@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.Data.Entities;
+using API.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -147,5 +148,15 @@ namespace API.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "");
             }
         }        
+        
+        [HttpPatch("{whistileID}")]
+        public async Task<IActionResult> PatchWhistle(int whistleID, List<PatchDto> patchDtos)
+        {
+            //patchDtos {
+                
+            //};                                           TODO ADD PATCH FOR WHISTLE
+            //_repository.ApplyPatchAsync()
+            return BadRequest();
+        }
     }
 }

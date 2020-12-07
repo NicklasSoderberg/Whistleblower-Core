@@ -41,7 +41,7 @@
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
       <textarea name="" id="" cols="100" rows="7" placeholder=""
-                v-model="newWhistle.OtherEmployee"></textarea>
+                v-model="newWhistle.otherEmployee"></textarea>
       </vs-row>
     </div>
     <vs-row type="flex" justify="center" align="center">
