@@ -57,30 +57,14 @@ export default {
   props: {
     whistleID: {},
   },
-  created() {
-    // this.interval = setInterval(() => this.userLastCount(), 1000);
-    // Todo call this method in another compontent
-    // this.answerDisable();
-  },
   computed: {
     canSendMsg() {
       return this.disableButton ? 'disabled' : '';
     },
   },
-
   methods: {
     async createPostMessage() {
-      await conversations.postMessage(this.$store.getters.StateUserToken,
-        {
-          conversationID: 0,
-          message: this.postMessage,
-          whistleID: this.whistleID,
-          sender: 0,
-          sent: '1900-01-01T00:00:00',
-          read: '1900-01-01T00:00:00',
-          fileID: 2,
-        });
-      this.conversations.push({
+      const messageData = {
         conversationID: 0,
         message: this.postMessage,
         whistleID: this.whistleID,
@@ -88,14 +72,18 @@ export default {
         sent: '1900-01-01T00:00:00',
         read: '1900-01-01T00:00:00',
         fileID: 2,
-      });
+      };
+      await conversations.postMessage(
+        this.$store.getters.StateUserToken,
+        messageData,
+      );
+      this.conversations.push(messageData);
     },
     async getConversations() {
-      await conversations.getAll(this.$store.getters.StateUserToken,
-        this.whistleID).then((response) => {
-        this.conversations = response;
-      });
-      this.answerDisable();
+      await conversations.getAll(this.$store.getters.StateUserToken, this.whistleID)
+        .then((response) => {
+          this.conversations = response;
+        });
     },
     async sendMessage() {
       await this.createPostMessage();

@@ -55,30 +55,14 @@ export default {
     newMessage: false,
     postMessage: '',
   }),
-  created() {
-    // this.interval = setInterval(() => this.userLastCount(), 1000);
-    // Todo call this method in another compontent
-    // this.answerDisable();
-  },
   computed: {
     canSendMsg() {
       return this.disableButton ? 'disabled' : '';
     },
   },
-
   methods: {
     async createPostMessage() {
-      await conversations.postMessage(this.$store.getters.StateUserToken,
-        {
-          conversationID: 0,
-          message: this.postMessage,
-          whistleID: this.whistle.whistleID,
-          sender: 1,
-          sent: '1900-01-01T00:00:00',
-          read: '1900-01-01T00:00:00',
-          fileID: 2,
-        });
-      this.conversations.push({
+      const messageData = {
         conversationID: 0,
         message: this.postMessage,
         whistleID: this.whistle.whistleID,
@@ -86,7 +70,11 @@ export default {
         sent: '1900-01-01T00:00:00',
         read: '1900-01-01T00:00:00',
         fileID: 2,
-      });
+      };
+
+      await conversations.postMessage(this.$store.getters.StateUserToken, messageData);
+
+      this.conversations.push(messageData);
     },
     async getWhistle() {
       await whistle.getByUserId(this.$store.getters.StateUserToken,
@@ -95,17 +83,21 @@ export default {
       });
     },
     async getConversations(whistleId) {
-      await conversations.getAll(this.$store.getters.StateUserToken,
-        whistleId).then((response) => {
+      await conversations.getAll(
+        this.$store.getters.StateUserToken,
+        whistleId,
+      ).then((response) => {
         this.conversations = response;
         console.log(this.conversations);
       });
+
       this.answerDisable();
     },
     async sendMessage() {
       console.log('send button');
-      // this.answerDisable();
+
       await this.createPostMessage();
+
       this.answerDisable();
     },
     answerDisable() {
@@ -121,7 +113,6 @@ export default {
   async mounted() {
     await this.getWhistle();
     await this.getConversations(this.whistle.whistleID);
-    // this.interval = setInterval(() => this.getConversations(this.whistle.whistleID), 10000);
   },
 };
 </script>
