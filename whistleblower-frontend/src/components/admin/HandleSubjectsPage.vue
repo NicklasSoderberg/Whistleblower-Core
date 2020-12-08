@@ -20,13 +20,13 @@
               <vs-input label="Visningsnamn" v-model="subjectName"> </vs-input>
             </vs-row>
               <vs-row justify="center">
-         <div class="error" v-if="!$v.subjectName.required" >Namnet måste vara ifyllt</div>
+         <div class="error" v-if="SumbitError" >Namnet måste vara ifyllt</div>
       </vs-row>
           </div>
         </div>
         <div id="space">
           <vs-row type="flex" justify="center" align="center">
-            <vs-button gradient primary @click="createSubject(subjectName), active = !active">
+            <vs-button gradient primary @click="createSubject(subjectName)">
               Lägg till</vs-button
             >
             <vs-button flat @click="active = !active">Avbryt</vs-button>
@@ -48,6 +48,7 @@ export default {
   data: () => ({
     active: false,
     subjectName: '',
+    SumbitError: false,
   }),
   validations: {
     subjectName: {
@@ -56,15 +57,21 @@ export default {
   },
   methods: {
     createSubject() {
-      subject.create(this.$store.getters.StateUserToken, {
-        subjectID: 0,
-        text: this.subjectName,
-        created: null,
-        modified: null,
-        deleted: null,
-        active: true,
-      });
-      this.subjectName = '';
+      if (this.$v.subjectName.required !== false) {
+        this.SumbitError = false;
+        subject.create(this.$store.getters.StateUserToken, {
+          subjectID: 0,
+          text: this.subjectName,
+          created: null,
+          modified: null,
+          deleted: null,
+          active: true,
+        });
+        this.active = !this.active;
+        this.subjectName = '';
+      } else {
+        this.SumbitError = true;
+      }
     },
   },
 };

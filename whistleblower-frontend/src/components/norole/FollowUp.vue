@@ -7,16 +7,13 @@
       <vs-input v-model="value1" v-model.trim="$v.value1.$model" placeholder="Ärende ID">
       </vs-input>
       </vs-row>
-       <vs-row justify="center">
-         <div class="error" v-if="!$v.value1.required" >Ärende ID måste vara ifyllt</div>
-      </vs-row>
       <vs-row type="flex" justify="center" align="center">
       <vs-input id="space" type="password"
        v-model.trim="$v.value2.$model" icon-after v-model="value2" placeholder="Lösenord">
       </vs-input>
       </vs-row>
       <vs-row justify="center">
-         <div class="error danger" v-if="!$v.value2.required" >Lösenordet måste vara ifyllt</div>
+         <div class="error danger" v-if="submitStatus ==='ERROR'">Lösenordet måste vara ifyllt</div>
       </vs-row>
       <vs-row id="space" type="flex" justify="center" align="center">
       <vs-button gradient primary>Följ upp ärende</vs-button>
@@ -32,6 +29,7 @@ export default {
   data: () => ({
     value1: '',
     value2: '',
+    submitStatus: 'OK',
   }),
   validations: {
     value1: {
