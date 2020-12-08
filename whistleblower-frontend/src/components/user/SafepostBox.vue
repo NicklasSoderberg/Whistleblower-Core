@@ -54,20 +54,38 @@ export default {
     disableButton: false,
     newMessage: false,
     postMessage: '',
+    timestamp: '',
+    mixintime: '',
   }),
   computed: {
     canSendMsg() {
       return this.disableButton ? 'disabled' : '';
     },
   },
+  created() {
+    setInterval(this.getNow, 1000);
+  },
   methods: {
+    getNow() {
+      const today = new Date();
+      const month = (today.getMonth() + 1 < 10 ? '0' : '') + (today.getMonth() + 1);
+      const day = (today.getDate() < 10 ? '0' : '') + today.getDate();
+      const minutes = (today.getMinutes() < 10 ? '0' : '') + today.getMinutes();
+
+      const date = `${today.getFullYear()}-${month}-${day}`;
+      const time = `${today.getHours()}:${minutes}:${(today.getSeconds() < 10 ? '0' : '') + today.getSeconds()}`;
+
+      const dateTime = `${date}T${time}`;
+      this.timestamp = dateTime;
+    },
     async createPostMessage() {
+      console.log(this.timestamp);
       const messageData = {
         conversationID: 0,
         message: this.postMessage,
         whistleID: this.whistle.whistleID,
         sender: 1,
-        sent: '1900-01-01T00:00:00',
+        sent: this.timestamp,
         read: '1900-01-01T00:00:00',
         fileID: 2,
       };
@@ -75,6 +93,7 @@ export default {
       await conversations.postMessage(this.$store.getters.StateUserToken, messageData);
 
       this.conversations.push(messageData);
+      console.log(this.timestamp);
     },
     async getWhistle() {
       await whistle.getByUserId(this.$store.getters.StateUserToken,
