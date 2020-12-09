@@ -120,7 +120,7 @@ export default {
       });
       await whistle.create({
         whistleID: 0,
-        lawyerID: null,
+        lawyerID: '00000000-0000-0000-0000-000000000000',
         userID: this.createdUser.userId,
         aboutInfo: this.newWhistle.About,
         whenInfo: this.newWhistle.When,
