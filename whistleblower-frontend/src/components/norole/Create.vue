@@ -2,50 +2,70 @@
   <div class="hello">
     <div class="center content-inputs">
       <vs-row type="flex" justify="center" align="center">
-      <label id="top">Vad gäller ärendet?</label>
+      <label id="top" class="LabelMargin">Vad gäller ärendet?</label>
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
-      <select v-model="newWhistle.About" style="outline: none;">
+      <select v-model="about" style="outline: none;">
         <option></option>
         <option v-for="(option, index) in options" :key="index">
           {{option.text}}
         </option>
       </select>
       </vs-row>
-      <vs-row type="flex" justify="center" align="center">
-      <label>När inträffa händelsen?</label>
+            <vs-row justify="center" align="center">
+      <div class="error" v-if="aboutStatus" >
+           Du måste välja en typ</div>
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
-      <textarea name="" id="" cols="100" rows="7" placeholder=""
-                v-model="newWhistle.When"></textarea>
-      </vs-row>
-
-      <vs-row type="flex" justify="center" align="center">
-      <label>Vart inträffade händelsen?</label>
+      <label class="LabelMargin">När inträffa händelsen?</label>
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
-      <textarea name="" id="" cols="100" rows="7" placeholder=""
-                v-model="newWhistle.Where"></textarea>
+      <textarea name="" id="WhenText" cols="100" rows="7" placeholder=""
+                v-model="when"></textarea>
       </vs-row>
-
-      <vs-row type="flex" justify="center" align="center">
-      <label>Detailjer om ärendet?</label>
-      </vs-row>
-      <vs-row type="flex" justify="center" align="center">
-      <textarea name="" id="" cols="100" rows="7" placeholder=""
-                v-model="newWhistle.Description"></textarea>
+      <vs-row justify="center" align="center">
+      <div class="error" v-if="!$v.when.maxLength" >
+           Max 280 tecken</div>
       </vs-row>
 
       <vs-row type="flex" justify="center" align="center">
-      <label>Är andra anställda medvetna om detta?</label>
+      <label class="LabelMargin">Vart inträffade händelsen?</label>
       </vs-row>
       <vs-row type="flex" justify="center" align="center">
-      <textarea name="" id="" cols="100" rows="7" placeholder=""
-                v-model="newWhistle.otherEmployee"></textarea>
+      <textarea name="" id="WhereText" cols="100" rows="7" placeholder=""
+                v-model="where"></textarea>
+      </vs-row>
+      <vs-row justify="center" align="center">
+            <div class="error" v-if="!$v.where.maxLength" >
+           Max 280 tecken</div>
+      </vs-row>
+
+      <vs-row type="flex" justify="center" align="center">
+      <label class="LabelMargin">Detailjer om ärendet?</label>
+      </vs-row>
+      <vs-row type="flex" justify="center" align="center">
+      <textarea name="" id="DetailsText" cols="100" rows="7" placeholder=""
+                v-model="description"></textarea>
+      </vs-row>
+            <vs-row justify="center" align="center">
+      <div class="error" v-if="!$v.description.maxLength" >
+           Max 280 tecken</div>
+      </vs-row>
+
+      <vs-row type="flex" justify="center" align="center">
+      <label class="LabelMargin">Är andra anställda medvetna om detta?</label>
+      </vs-row>
+      <vs-row type="flex" justify="center" align="center">
+      <textarea name="" id="otherEmployeeText" cols="100" rows="7" placeholder=""
+                v-model="otherEmployee"></textarea>
+      </vs-row>
+           <vs-row justify="center" align="center">
+      <div class="error" v-if="!$v.otherEmployee.maxLength" >
+           Max 280 tecken</div>
       </vs-row>
     </div>
     <vs-row type="flex" justify="center" align="center">
-    <vs-button flat @click="active=!active">Nästa</vs-button>
+    <vs-button flat @click="checkDetails()">Nästa</vs-button>
     </vs-row>
 
     <vs-dialog blur not-close overflow-hidden v-model="active" prevent-close>
@@ -93,6 +113,7 @@
 </template>
 
 <script>
+import { required, maxLength } from 'vuelidate/lib/validators';
 import whistle from '../../apicalls/whistle';
 import subject from '../../apicalls/subject';
 
@@ -105,15 +126,73 @@ export default {
     active: false,
     active2: false,
     options: [],
-    newWhistle: {
-      about: '',
-      when: '',
-      where: '',
-      description: '',
-      otherEmployee: '',
-    },
+    about: '',
+    when: '',
+    where: '',
+    description: '',
+    otherEmployee: '',
+    aboutStatus: false,
+    whenStatus: false,
+    whereStatus: false,
+    descriptionStatus: false,
+    otherEmployeeStatus: false,
   }),
+  validations: {
+    about: {
+      required,
+      maxLength: maxLength(280),
+    },
+    when: {
+      required,
+      maxLength: maxLength(280),
+    },
+    where: {
+      required,
+      maxLength: maxLength(280),
+    },
+    description: {
+      required,
+      maxLength: maxLength(280),
+    },
+    otherEmployee: {
+      required,
+      maxLength: maxLength(280),
+    },
+
+  },
   methods: {
+    checkDetails() {
+      if (this.about !== '' && this.when !== '' && this.where !== '' && this.description !== '' && this.otherEmployee !== '') {
+        this.active = !this.active;
+      } else {
+        // eslint-disable-next-line no-lonely-if
+        if (this.about === '') {
+          this.aboutStatus = true;
+        } else {
+          this.aboutStatus = false;
+        }
+        // eslint-disable-next-line no-lonely-if
+        if (this.when === '') {
+          document.getElementById('WhenText').placeholder = 'Du måste fylla i när det hände';
+          document.getElementById('WhenText').classList.add('error-textarea');
+        }
+        // eslint-disable-next-line no-lonely-if
+        if (this.where === '') {
+          document.getElementById('WhereText').placeholder = 'Du måste fylla i vart det hände';
+          document.getElementById('WhereText').classList.add('error-textarea');
+        }
+        // eslint-disable-next-line no-lonely-if
+        if (this.description === '') {
+          document.getElementById('DetailsText').placeholder = 'Du måste fylla i detaljer om det som hänt';
+          document.getElementById('DetailsText').classList.add('error-textarea');
+        }
+        // eslint-disable-next-line no-lonely-if
+        if (this.otherEmployee === '') {
+          document.getElementById('otherEmployeeText').placeholder = 'Du måste fylla i om några andra är medvetna om det här';
+          document.getElementById('otherEmployeeText').classList.add('error-textarea');
+        }
+      }
+    },
     async createWhistle() {
       await whistle.createUser().then((response) => {
         this.createdUser = response;
@@ -122,11 +201,11 @@ export default {
         whistleID: 0,
         lawyerID: '00000000-0000-0000-0000-000000000000',
         userID: this.createdUser.userId,
-        aboutInfo: this.newWhistle.About,
-        whenInfo: this.newWhistle.When,
-        whereInfo: this.newWhistle.Where,
-        descriptionInfo: this.newWhistle.Description,
-        otherEmployeeInfo: this.newWhistle.otherEmployee,
+        aboutInfo: this.About,
+        whenInfo: this.When,
+        whereInfo: this.Where,
+        descriptionInfo: this.Description,
+        otherEmployeeInfo: this.otherEmployee,
         currentStatus: 'Aktiv',
         created: null,
         modified: null,
@@ -153,6 +232,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.LabelMargin{
+  margin-top: 25px;
+}
+.error-textarea::-webkit-input-placeholder {
+    color: red;
+ }
 #top{
   margin-top: 25px;
 }
@@ -173,7 +258,6 @@ a {
 }
 textarea {
   resize: none;
-  margin-bottom: 25px;
   font-family:"Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   -webkit-border-radius: 5px;
@@ -182,7 +266,6 @@ textarea {
      outline: none;
 }
 select{
-  margin-bottom: 25px;
   width: 300px;
   font-size: 16px;
 }

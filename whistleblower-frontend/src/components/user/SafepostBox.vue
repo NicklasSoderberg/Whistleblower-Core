@@ -24,7 +24,7 @@
       id="person2-input" type="text" placeholder="Type your message">
 
       </textarea>
-<vs-button type="submit" gradient primary @click="active=!active &&
+<vs-button type="submit" gradient primary @click="
  disableButton === true">Skicka meddelande</vs-button>
     </form>
       </vs-dialog>
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators';
 import whistle from '../../apicalls/whistle';
 import conversations from '../../apicalls/conversation';
 
@@ -55,6 +56,11 @@ export default {
     newMessage: false,
     postMessage: '',
   }),
+  validations: {
+    postMessage: {
+      required,
+    },
+  },
   created() {
     // this.interval = setInterval(() => this.userLastCount(), 1000);
     // Todo call this method in another compontent
@@ -68,8 +74,18 @@ export default {
 
   methods: {
     async createPostMessage() {
-      await conversations.postMessage(this.$store.getters.StateUserToken,
-        {
+      if (this.$v.postMessage.required !== false) {
+        await conversations.postMessage(this.$store.getters.StateUserToken,
+          {
+            conversationID: 0,
+            message: this.postMessage,
+            whistleID: this.whistle.whistleID,
+            sender: 1,
+            sent: '1900-01-01T00:00:00',
+            read: '1900-01-01T00:00:00',
+            fileID: 2,
+          });
+        this.conversations.push({
           conversationID: 0,
           message: this.postMessage,
           whistleID: this.whistle.whistleID,
@@ -78,15 +94,10 @@ export default {
           read: '1900-01-01T00:00:00',
           fileID: 2,
         });
-      this.conversations.push({
-        conversationID: 0,
-        message: this.postMessage,
-        whistleID: this.whistle.whistleID,
-        sender: 1,
-        sent: '1900-01-01T00:00:00',
-        read: '1900-01-01T00:00:00',
-        fileID: 2,
-      });
+        this.active = !this.active;
+      } else {
+        document.getElementById('person2-input').placeholder = 'Du måste skriva ett meddelande för att skicka!';
+      }
     },
     async getWhistle() {
       await whistle.getByUserId(this.$store.getters.StateUserToken,
