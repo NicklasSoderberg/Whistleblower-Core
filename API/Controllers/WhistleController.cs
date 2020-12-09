@@ -83,6 +83,9 @@ namespace API.Controllers
                 var oldWhistle = await _repository.GetWhistle(whistleID);
                 if (oldWhistle == null)
                     return NotFound("");
+
+                WhistleInput.Modified = DateTime.Now;
+                WhistleInput.Created = oldWhistle.Created;
                 _mapper.Map(WhistleInput, oldWhistle);
                 if (await _repository.SaveChangesAsync())
                 {

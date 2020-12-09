@@ -41,10 +41,12 @@
 import { required } from 'vuelidate/lib/validators';
 import TableSubject from './TableSubject.vue';
 import subject from '../../apicalls/subject';
+import mix from '../../mixins/myMixin';
 
 export default {
   components: { TableSubject },
   name: 'HandleSubjectsPage',
+  mixins: [mix],
   data: () => ({
     active: false,
     subjectName: '',
@@ -62,7 +64,7 @@ export default {
         subject.create(this.$store.getters.StateUserToken, {
           subjectID: 0,
           text: this.subjectName,
-          created: null,
+          created: this.mixGetNow(),
           modified: null,
           deleted: null,
           active: true,

@@ -93,10 +93,12 @@
 import whistle from '../../apicalls/whistle';
 import NotificationHelper from './NotificationHelper.vue';
 import lawyer from '../../apicalls/lawyer';
+import mix from '../../mixins/myMixin';
 
 export default {
   components: {},
   name: 'TableWhistle',
+  mixins: [mix],
   data: () => ({
     selected: { name: '' },
     active: false,
@@ -104,7 +106,7 @@ export default {
     page: 1,
     max: 10,
     editActive: false,
-    edit: null,
+    edit: {},
     editProp: {},
     whistles: [],
     lawyers: [],
