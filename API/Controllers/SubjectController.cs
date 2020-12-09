@@ -85,6 +85,10 @@ namespace API.Controllers
                 var oldSubject = await _repository.GetSubject(subjectID);
                 if (oldSubject == null)
                     return NotFound("");
+
+                if (subjectInput.Modified != null)
+                    subjectInput.Created = oldSubject.Created;
+
                 _mapper.Map(subjectInput, oldSubject);
                 if (await _repository.SaveChangesAsync())
                 {

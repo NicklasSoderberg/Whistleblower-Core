@@ -126,10 +126,12 @@
 import { required, maxLength } from 'vuelidate/lib/validators';
 import whistle from '../../apicalls/whistle';
 import subject from '../../apicalls/subject';
+import mix from '../../mixins/myMixin';
 import files from '../../apicalls/file';
 
 export default {
   name: 'Create',
+  mixins: [mix],
   data: () => ({
     value: '',
     files: [],
@@ -228,7 +230,7 @@ export default {
         descriptionInfo: this.description,
         otherEmployeeInfo: this.otherEmployee,
         currentStatus: 'Aktiv',
-        created: null,
+        created: this.mixGetNow(),
         modified: null,
         deleted: null,
         active: true,

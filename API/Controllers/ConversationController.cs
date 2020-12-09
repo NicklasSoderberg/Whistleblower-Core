@@ -43,6 +43,16 @@ namespace API.Controllers
         {
             try
             {
+                var oldWhistle = await _repository.GetWhistle(ConversationInput.WhistleID);
+                if (ConversationInput.Sender == Sender.Lawyer)
+                {
+                    oldWhistle.LastSender = 0;
+                }
+                else
+                {
+                    oldWhistle.LastSender = 1;
+                }
+
                 Conversation C = _mapper.Map<Conversation>(ConversationInput);
                 _repository.Add(C);
                 if (await _repository.SaveChangesAsync())

@@ -55,10 +55,12 @@
 <script>
 import subject from '../../apicalls/subject';
 import NotificationHelper from './NotificationHelper.vue';
+import mix from '../../mixins/myMixin';
 
 export default {
   components: { },
   name: 'TableSubject',
+  mixins: [mix],
   data: () => ({
     selected: { name: '' },
     active: false,
@@ -79,9 +81,7 @@ export default {
     updateSubject(subjectToUpdate) {
       subject.update(this.$store.getters.StateUserToken, {
         active: !subjectToUpdate.active,
-        created: null,
-        deleted: null,
-        modified: null,
+        modified: this.mixGetNow(),
         subjectID: subjectToUpdate.subjectID,
         text: subjectToUpdate.text,
       }).then(() => {

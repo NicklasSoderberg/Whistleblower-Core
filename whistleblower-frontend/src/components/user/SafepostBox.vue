@@ -45,9 +45,11 @@
 import { required } from 'vuelidate/lib/validators';
 import whistle from '../../apicalls/whistle';
 import conversations from '../../apicalls/conversation';
+import mix from '../../mixins/myMixin';
 
 export default {
   name: 'SafepostBox',
+  mixins: [mix],
   data: () => ({
     whistle: {},
     conversations: [],
@@ -55,45 +57,38 @@ export default {
     disableButton: false,
     newMessage: false,
     postMessage: '',
+    timestamp: '',
+    mixintime: '',
   }),
   validations: {
     postMessage: {
       required,
     },
   },
-  created() {
-    // this.interval = setInterval(() => this.userLastCount(), 1000);
-    // Todo call this method in another compontent
-    // this.answerDisable();
-  },
   computed: {
     canSendMsg() {
       return this.disableButton ? 'disabled' : '';
     },
   },
-
+  created() {
+  },
   methods: {
     async createPostMessage() {
       if (this.$v.postMessage.required !== false) {
-        await conversations.postMessage(this.$store.getters.StateUserToken,
-          {
-            conversationID: 0,
-            message: this.postMessage,
-            whistleID: this.whistle.whistleID,
-            sender: 1,
-            sent: '1900-01-01T00:00:00',
-            read: '1900-01-01T00:00:00',
-            fileID: 2,
-          });
-        this.conversations.push({
+        const messageData = {
           conversationID: 0,
           message: this.postMessage,
           whistleID: this.whistle.whistleID,
           sender: 1,
-          sent: '1900-01-01T00:00:00',
+          sent: this.mixGetNow(),
           read: '1900-01-01T00:00:00',
           fileID: 2,
-        });
+        };
+
+        await conversations.postMessage(this.$store.getters.StateUserToken, messageData);
+
+        this.conversations.push(messageData);
+
         this.active = !this.active;
       } else {
         document.getElementById('person2-input').placeholder = 'Du måste skriva ett meddelande för att skicka!';
@@ -106,17 +101,19 @@ export default {
       });
     },
     async getConversations(whistleId) {
-      await conversations.getAll(this.$store.getters.StateUserToken,
-        whistleId).then((response) => {
+      await conversations.getAll(
+        this.$store.getters.StateUserToken,
+        whistleId,
+      ).then((response) => {
         this.conversations = response;
         console.log(this.conversations);
       });
+
       this.answerDisable();
     },
     async sendMessage() {
-      console.log('send button');
-      // this.answerDisable();
       await this.createPostMessage();
+
       this.answerDisable();
     },
     answerDisable() {
@@ -132,7 +129,6 @@ export default {
   async mounted() {
     await this.getWhistle();
     await this.getConversations(this.whistle.whistleID);
-    // this.interval = setInterval(() => this.getConversations(this.whistle.whistleID), 10000);
   },
 };
 </script>
