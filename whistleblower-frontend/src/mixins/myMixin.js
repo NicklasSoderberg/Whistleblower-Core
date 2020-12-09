@@ -1,12 +1,13 @@
 export default {
   data: () => ({
-    timestamp: '',
+    msg: 'Hello World data input',
+    mixTimeStamp: '',
   }),
-  created() {
-    setInterval(this.getNow, 1000);
-  },
   methods: {
-    getNow() {
+    displayMessage() {
+      console.log('now printing from a mixin function');
+    },
+    mixGetNow() {
       const today = new Date();
       const month = (today.getMonth() + 1 < 10 ? '0' : '') + (today.getMonth() + 1);
       const day = (today.getDate() < 10 ? '0' : '') + today.getDate();
@@ -16,7 +17,12 @@ export default {
       const time = `${today.getHours()}:${minutes}:${(today.getSeconds() < 10 ? '0' : '') + today.getSeconds()}`;
 
       const dateTime = `${date}T${time}`;
-      this.timestamp = dateTime;
+      this.mixTimeStamp = dateTime;
+
+      return this.mixTimeStamp;
     },
+  },
+  mounted() {
+    setInterval(this.getNow, 1000);
   },
 };

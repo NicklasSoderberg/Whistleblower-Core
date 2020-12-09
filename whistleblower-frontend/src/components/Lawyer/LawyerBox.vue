@@ -43,9 +43,11 @@
 
 <script>
 import conversations from '../../apicalls/conversation';
+import mix from '../../mixins/myMixin';
 
 export default {
   name: 'lawyerBox',
+  mixins: [mix],
   data: () => ({
     whistle: {},
     conversations: [],
@@ -69,7 +71,7 @@ export default {
         message: this.postMessage,
         whistleID: this.whistleID,
         sender: 0,
-        sent: '1900-01-01T00:00:00',
+        sent: this.mixGetNow(),
         read: '1900-01-01T00:00:00',
         fileID: 2,
       };
