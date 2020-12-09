@@ -15,9 +15,6 @@
         </vs-input>
         </div>
         </vs-row>
-      <vs-row justify="center">
-         <div class="error" v-if="!$v.username.required" >Användarnamnet måste vara ifyllt</div>
-      </vs-row>
         <vs-row justify="center" align="center">
         <div justify="center" align="center" :class="{ 'form-group--error': $v.password.$error }">
         <vs-input :state="statePass" type="password"
@@ -34,10 +31,8 @@
           </div>
       </vs-row>
         <vs-row justify="center">
-         <div class="error" v-if="!$v.password.required" >Lösenordet måste vara ifyllt</div>
-      </vs-row>
-        <vs-row justify="center">
-        <div class="error" v-if="submitStatus === 'ERROR'"><p>Fälten måste vara ifyllda</p></div>
+        <div class="error" v-if="submitStatus === 'ERROR'"><p
+        id="errortext">Fälten måste vara ifyllda</p></div>
       </vs-row>
         <vs-row justify="center" align="center">
         <vs-button gradient primary type="submit">Logga in</vs-button>

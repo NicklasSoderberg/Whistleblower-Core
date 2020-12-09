@@ -14,13 +14,15 @@ const whistle = {
     return responseData;
   },
   async create(input) {
+    let responseData;
     await axios.post('whistle', input, {
       headers: {
         'Content-Type': 'application/json',
       },
     }).then((response) => {
-      console.log(response.data);
+      responseData = response.data;
     });
+    return responseData;
   },
   async getByUserId(token, userId) {
     let responseData;

@@ -24,7 +24,7 @@
       id="person2-input" type="text" placeholder="Type your message">
 
       </textarea>
-<vs-button type="submit" gradient primary @click="active=!active &&
+<vs-button type="submit" gradient primary @click="
  disableButton === true">Skicka meddelande</vs-button>
     </form>
       </vs-dialog>
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators';
 import whistle from '../../apicalls/whistle';
 import conversations from '../../apicalls/conversation';
 import mix from '../../mixins/myMixin';
@@ -59,6 +60,11 @@ export default {
     timestamp: '',
     mixintime: '',
   }),
+  validations: {
+    postMessage: {
+      required,
+    },
+  },
   computed: {
     canSendMsg() {
       return this.disableButton ? 'disabled' : '';
@@ -68,20 +74,25 @@ export default {
   },
   methods: {
     async createPostMessage() {
-      const messageData = {
-        conversationID: 0,
-        message: this.postMessage,
-        whistleID: this.whistle.whistleID,
-        sender: 1,
-        sent: this.mixGetNow(),
-        read: '1900-01-01T00:00:00',
-        fileID: 2,
-      };
+      if (this.$v.postMessage.required !== false) {
+        const messageData = {
+          conversationID: 0,
+          message: this.postMessage,
+          whistleID: this.whistle.whistleID,
+          sender: 1,
+          sent: this.mixGetNow(),
+          read: '1900-01-01T00:00:00',
+          fileID: 2,
+        };
 
-      await conversations.postMessage(this.$store.getters.StateUserToken, messageData);
+        await conversations.postMessage(this.$store.getters.StateUserToken, messageData);
 
-      this.conversations.push(messageData);
-      console.log(this.timestamp);
+        this.conversations.push(messageData);
+
+        this.active = !this.active;
+      } else {
+        document.getElementById('person2-input').placeholder = 'Du måste skriva ett meddelande för att skicka!';
+      }
     },
     async getWhistle() {
       await whistle.getByUserId(this.$store.getters.StateUserToken,
