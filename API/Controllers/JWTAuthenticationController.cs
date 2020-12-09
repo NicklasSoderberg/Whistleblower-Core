@@ -53,7 +53,7 @@ namespace JWTAuthentication.Controllers
                 {
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
-               
+
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 
                 var token = new JwtSecurityToken(
@@ -69,8 +69,9 @@ namespace JWTAuthentication.Controllers
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     expiration = token.ValidTo,
                     role = userRoles[0],
-                    userId = user.Id
-            });
+                    userId = user.Id,
+                    firstlogin = user.FirstLogin
+                });
             }
             return Unauthorized();
         }
@@ -109,7 +110,7 @@ namespace JWTAuthentication.Controllers
                 userId = returnUserId.Id,
                 username = generatedUsername.Value,
                 password = generatedPassword.Value
-            }) ;
+            });
         }
 
         [Authorize(Roles = "Admin")]
@@ -138,12 +139,23 @@ namespace JWTAuthentication.Controllers
 
             if (await roleManager.RoleExistsAsync("Lawyer"))
                 await userManager.AddToRoleAsync(user, "Lawyer");
-            
+
 
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+        }
+        //TODO lägg till authentication för lawyer [Authorize(Roles = "Lawyer")] få det att funka
+        [HttpPost]
+        [Route("changepassword/{id}/{password}/{newpassword}")]
+        public async Task<IActionResult> changeLawyerPassword(string id, string password, string newpassword)
+        {
+            AppUser user = await userManager.FindByIdAsync(id);
+            var result = await userManager.ChangePasswordAsync(user,password,newpassword);
+            user.FirstLogin = false;
+            await userManager.UpdateAsync(user);
+            return Ok(result);
         }
 
         //[Authorize(Roles = "Admin")]
@@ -164,6 +176,18 @@ namespace JWTAuthentication.Controllers
                 });
             return Ok(AllLawyers);
         }
+        [Authorize(Roles = "Lawyer")]
+        [HttpGet]
+        [Route("firstlogin/{id}")]
+        public async Task<IActionResult> firstlogin(string id)
+        {
+            var lawyer = await userManager.FindByIdAsync(id);
+            if(lawyer != null)
+            {
+                return Ok(lawyer.FirstLogin);
+            }
+            return NotFound();
+        }
 
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<string>> AutoGenerateID(bool isPassword)
@@ -182,7 +206,6 @@ namespace JWTAuthentication.Controllers
                     generatedID += r.Next(0, 9).ToString();
                 }
             }
-
             if (!isPassword)
             {
                 var userExists = await userManager.FindByNameAsync(generatedID);

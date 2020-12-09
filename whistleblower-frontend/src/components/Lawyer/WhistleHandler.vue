@@ -3,6 +3,27 @@
     <vs-row
           justify="center"
           align="center">
+          <vs-dialog blur not-close v-model="active2">
+            <vs-row justify="center">
+            <h3>Ändra lösenord</h3>
+            </vs-row>
+            <vs-row justify="center">
+            <vs-input placeholder="Gammalt Lösenord" type="password" v-model="password">
+            </vs-input>
+            </vs-row>
+            <vs-row justify="center">
+            <vs-input placeholder="Nytt Lösenord" type="password" v-model="newpassword">
+            </vs-input>
+            </vs-row>
+            <vs-row justify="center">
+              <vs-button @click="ChangePassword()">
+                Ändra lösenord
+              </vs-button>
+            </vs-row>
+            <vs-row>
+              <p>Vid första inloggning måste du ändra lösenord av säkerhetskäl</p>
+            </vs-row>
+          </vs-dialog>
       <vs-table
         id="table"
         v-model="selected"
@@ -119,6 +140,10 @@ import lawyer from '../../apicalls/lawyer';
 export default {
   name: 'WhistleHandler',
   data: () => ({
+    firstlogin: null,
+    active2: null,
+    password: '',
+    newpassword: '',
     selected: '',
     SelectedWhistle: {},
     active: false,
@@ -133,6 +158,12 @@ export default {
     whistles: [{ aboutInfo: '' }], // Är den tom & bindad snear tabellen
   }),
   methods: {
+    ChangePassword() {
+      lawyer.ChangeLawyerPassword(this.$store.getters.StateUserToken,
+        this.$store.getters.StateUserId,
+        this.password, this.newpassword);
+      this.active2 = !this.active2;
+    },
     RouteClick() {
       // this.$router.push(route, params({ this.selected.whistleID});
 
@@ -162,9 +193,19 @@ export default {
         this.whistles = response;
       });
     },
+    async getFirstLogin() {
+      await lawyer.getLawyerFirstLoginById(this.$store.getters.StateUserToken,
+        this.$store.getters.StateUserId).then((response) => {
+        this.firstlogin = response;
+        if (this.firstlogin === true) {
+          this.active2 = true;
+        }
+      });
+    },
   },
   async mounted() {
     await this.getWhistles();
+    await this.getFirstLogin();
   },
 };
 </script>

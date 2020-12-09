@@ -13,6 +13,30 @@ const lawyer = {
     });
     return responseData;
   },
+  async getLawyerFirstLoginById(token, input) {
+    let responseData;
+    await axios.get(`authenticate/firstlogin/${input}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((response) => {
+      responseData = response.data;
+    });
+    return responseData;
+  },
+  async ChangeLawyerPassword(token, id, password, newpassword) {
+    // eslint-disable-next-line no-unused-vars
+    let responseData;
+    await axios.post(`authenticate/changepassword/${id}/${password}/${newpassword}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((response) => {
+      responseData = response.data;
+    });
+  },
   async getAll(token) {
     let responseData;
     await axios.get('authenticate/lawyers', {
