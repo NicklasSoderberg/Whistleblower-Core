@@ -63,11 +63,21 @@
       <div class="error" v-if="!$v.otherEmployee.maxLength" >
            Max 280 tecken</div>
       </vs-row>
+      <vs-row justify="center" align="center">
+      <input type="file"
+      id="file"
+      ref="myFiles"
+       accept="image/png, image/jpeg"
+       @change="previewFiles()"
+       multiple>
+       </vs-row>
     </div>
     <vs-row type="flex" justify="center" align="center">
     <vs-button flat @click="checkDetails()">Nästa</vs-button>
     </vs-row>
-
+    <vs-row type="flex" justify="center" align="center">
+    <div id="preview"></div>
+    </vs-row>
     <vs-dialog blur not-close overflow-hidden v-model="active" prevent-close>
       <vs-row type="flex" justify="center" align="center">
             <h2>Vill du skicka ärendet?</h2>
@@ -116,11 +126,13 @@
 import { required, maxLength } from 'vuelidate/lib/validators';
 import whistle from '../../apicalls/whistle';
 import subject from '../../apicalls/subject';
+import files from '../../apicalls/file';
 
 export default {
   name: 'Create',
   data: () => ({
     value: '',
+    files: [],
     createdUser: {
     },
     active: false,
@@ -193,18 +205,27 @@ export default {
         }
       }
     },
+    async getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+      });
+    },
     async createWhistle() {
       await whistle.createUser().then((response) => {
         this.createdUser = response;
       });
+      let newWhistle;
       await whistle.create({
         whistleID: 0,
         lawyerID: '00000000-0000-0000-0000-000000000000',
         userID: this.createdUser.userId,
-        aboutInfo: this.About,
-        whenInfo: this.When,
-        whereInfo: this.Where,
-        descriptionInfo: this.Description,
+        aboutInfo: this.about,
+        whenInfo: this.when,
+        whereInfo: this.where,
+        descriptionInfo: this.description,
         otherEmployeeInfo: this.otherEmployee,
         currentStatus: 'Aktiv',
         created: null,
@@ -213,7 +234,24 @@ export default {
         active: true,
         removedAdminID: null,
         lastSender: -1,
+      }).then((response) => {
+        newWhistle = response;
       });
+      if (this.files.length > 0) {
+        // eslint-disable-next-line func-names
+        // eslint-disable-next-line no-restricted-syntax
+        for (const file of this.files) {
+          // eslint-disable-next-line no-await-in-loop
+          await files.post(this.$store.getters.StateUserToken,
+            {
+              fileID: 0,
+              // eslint-disable-next-line no-await-in-loop
+              base64: await this.getBase64(file),
+              extension: file.type,
+              whistleID: newWhistle.whistleID,
+            });
+        }
+      }
     },
     navigateLogin() {
       this.$router.push('Login');
@@ -222,6 +260,38 @@ export default {
       subject.getAllActive().then((response) => {
         this.options = response;
       });
+    },
+    previewFiles() {
+      this.files = this.$refs.myFiles.files;
+      let fileType;
+      const acceptFiles = ['image/jpg', 'image/jpeg', 'image/png'];
+      // eslint-disable-next-line no-plusplus
+      for (let i = 0; i < this.files.length; i++) {
+        if (this.files[i].size > 5000000) {
+          // eslint-disable-next-line no-alert
+          alert(`${this.files[i].name} is over the 5mb limit!\n\nPlease try again..`);
+          this.$refs.myFiles.value = '';
+          return;
+        }
+        fileType = this.files[i].type;
+        if (!acceptFiles.includes(fileType)) {
+          // eslint-disable-next-line no-alert
+          alert(`${fileType} is not an supported filetype!\n\nPlease try again..`);
+          this.$refs.myFiles.value = '';
+          return;
+        }
+      }
+      // eslint-disable-next-line prefer-const
+      let reader = new FileReader();
+      reader.readAsDataURL(this.files[0]);
+      // eslint-disable-next-line func-names
+      // reader.onload = function () {
+      //  console.log(reader.result);
+      // };
+      // eslint-disable-next-line func-names
+      // reader.onerror = function (error) {
+      //  console.log('Error: ', error);
+      // };
     },
   },
   mounted() {
@@ -273,5 +343,8 @@ label{
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
   margin-bottom: 5px;
+}
+#file{
+  margin-top: 15px;
 }
 </style>
