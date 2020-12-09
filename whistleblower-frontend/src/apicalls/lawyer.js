@@ -26,7 +26,6 @@ const lawyer = {
     return responseData;
   },
   async ChangeLawyerPassword(token, id, password, newpassword) {
-    // eslint-disable-next-line no-unused-vars
     let responseData;
     await axios.post(`authenticate/changepassword/${id}/${password}/${newpassword}`, {
       headers: {
@@ -36,6 +35,7 @@ const lawyer = {
     }).then((response) => {
       responseData = response.data;
     });
+    return responseData;
   },
   async getAll(token) {
     let responseData;

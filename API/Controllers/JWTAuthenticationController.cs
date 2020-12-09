@@ -146,9 +146,11 @@ namespace JWTAuthentication.Controllers
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
-        //TODO lägg till authentication för lawyer [Authorize(Roles = "Lawyer")] få det att funka
+
+
         [HttpPost]
         [Route("changepassword/{id}/{password}/{newpassword}")]
+        //[Authorize(Roles = "Lawyer")] TODO fixa authorize för lawyer
         public async Task<IActionResult> changeLawyerPassword(string id, string password, string newpassword)
         {
             AppUser user = await userManager.FindByIdAsync(id);
