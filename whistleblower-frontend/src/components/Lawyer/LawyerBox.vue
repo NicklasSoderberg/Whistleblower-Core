@@ -6,7 +6,7 @@
 <section ref="chatArea" class="chat-area">
 <p v-for="conversation in conversations"
 :key="conversation.conversationID" class="message"
-:class="{ 'message-out': conversation.sender === 1, 'message-in': conversation.sender !== 1 }">
+:class="{ 'message-out': conversation.sender === 0, 'message-in': conversation.sender !== 0 }">
       {{ conversation.message }}
     </p>
 
@@ -24,7 +24,7 @@
       id="person2-input" type="text" placeholder="Type your message">
 
       </textarea>
-<vs-button type="submit" gradient primary @click="
+<vs-button type="submit" gradient primary @click="active=!active &&
  disableButton === true">Skicka meddelande</vs-button>
     </form>
       </vs-dialog>
@@ -42,13 +42,11 @@
 </template>
 
 <script>
-import { required } from 'vuelidate/lib/validators';
-import whistle from '../../apicalls/whistle';
 import conversations from '../../apicalls/conversation';
 import mix from '../../mixins/myMixin';
 
 export default {
-  name: 'SafepostBox',
+  name: 'lawyerBox',
   mixins: [mix],
   data: () => ({
     whistle: {},
@@ -57,78 +55,44 @@ export default {
     disableButton: false,
     newMessage: false,
     postMessage: '',
-    timestamp: '',
-    mixintime: '',
   }),
-  validations: {
-    postMessage: {
-      required,
-    },
+  props: {
+    whistleID: {},
   },
   computed: {
     canSendMsg() {
       return this.disableButton ? 'disabled' : '';
     },
   },
-  created() {
-  },
   methods: {
     async createPostMessage() {
-      if (this.$v.postMessage.required !== false) {
-        const messageData = {
-          conversationID: 0,
-          message: this.postMessage,
-          whistleID: this.whistle.whistleID,
-          sender: 1,
-          sent: this.mixGetNow(),
-          read: '1900-01-01T00:00:00',
-          fileID: 2,
-        };
-
-        await conversations.postMessage(this.$store.getters.StateUserToken, messageData);
-
-        this.conversations.push(messageData);
-
-        this.active = !this.active;
-      } else {
-        document.getElementById('person2-input').placeholder = 'Du måste skriva ett meddelande för att skicka!';
-      }
-    },
-    async getWhistle() {
-      await whistle.getByUserId(this.$store.getters.StateUserToken,
-        this.$store.getters.StateUserId).then((response) => {
-        this.whistle = response;
-      });
-    },
-    async getConversations(whistleId) {
-      await conversations.getAll(
+      const messageData = {
+        conversationID: 0,
+        message: this.postMessage,
+        whistleID: this.whistleID,
+        sender: 0,
+        sent: this.mixGetNow(),
+        read: '1900-01-01T00:00:00',
+        fileID: 2,
+      };
+      await conversations.postMessage(
         this.$store.getters.StateUserToken,
-        whistleId,
-      ).then((response) => {
-        this.conversations = response;
-        console.log(this.conversations);
-      });
-
-      this.answerDisable();
+        messageData,
+      );
+      this.conversations.push(messageData);
+    },
+    async getConversations() {
+      await conversations.getAll(this.$store.getters.StateUserToken, this.whistleID)
+        .then((response) => {
+          this.conversations = response;
+        });
     },
     async sendMessage() {
       await this.createPostMessage();
-
-      this.answerDisable();
-    },
-    answerDisable() {
-      const i = this.conversations.length - 1;
-      const lastMsg = this.conversations[i];
-      if (lastMsg.sender === 1) {
-        this.disableButton = true;
-      } else {
-        this.disableButton = false;
-      }
     },
   },
   async mounted() {
-    await this.getWhistle();
-    await this.getConversations(this.whistle.whistleID);
+    await this.getConversations();
   },
 };
 </script>

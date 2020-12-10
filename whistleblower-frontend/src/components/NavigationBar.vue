@@ -52,9 +52,11 @@
           :active="curRoute == 'Home'"
           id="Home"
           v-on:click="RouteClick('/WhistleHandler')"
+          v-if="checkMessages === -1"
         >
           Mina ärende
         </vs-navbar-item>
+
       </template>
       <template v-else-if="userRole == 'Admin'">
         <vs-navbar-item
@@ -109,6 +111,8 @@ export default {
   data: () => ({
     newMessage: true,
     curRoute: '',
+    whistle: {},
+    disable: false,
   }),
   computed: {
     isLoggedIn() {
@@ -123,8 +127,8 @@ export default {
   },
   methods: {
     RouteClick(route) {
-      if (route === 'SafepostBox') {
-        this.newMessage = false;
+      if (this.userRole === 'User') {
+        console.log('testing');
       }
       this.$router.push(route);
       this.curRoute = this.$route.name;
@@ -142,9 +146,6 @@ export default {
     async logout() {
       await this.$store.dispatch('LogOut');
       this.$router.push('Login');
-    },
-    emitNewMsg() {
-      this.$root.$emit('userLastCount'); // like this
     },
   },
   name: 'Navigation',

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.Data.Entities;
+using API.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -82,6 +83,9 @@ namespace API.Controllers
                 var oldWhistle = await _repository.GetWhistle(whistleID);
                 if (oldWhistle == null)
                     return NotFound("");
+
+                WhistleInput.Modified = DateTime.Now;
+                WhistleInput.Created = oldWhistle.Created;
                 _mapper.Map(WhistleInput, oldWhistle);
                 if (await _repository.SaveChangesAsync())
                 {
@@ -114,6 +118,47 @@ namespace API.Controllers
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "");
             }
+            return BadRequest();
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpGet()]
+        [Route("userId/{userId}")]
+        public async Task<ActionResult<DtoWhistle>> GetUserWhistle([FromRoute] Guid userId)
+        {
+            try
+            {
+                var userWhistle = await _repository.GetUserWhistle(userId);
+                return _mapper.Map<DtoWhistle>(userWhistle);
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
+        }
+
+        //[Authorize(Roles = "Lawyer")]
+        [HttpGet("Lawyer/{LawyerId}")]
+        public async Task<ActionResult<DtoWhistle[]>> GetLawyerWhistles(Guid LawyerId)
+        {
+            try
+            {
+                var result = await _repository.GetLawyerWhistles(LawyerId);
+                return _mapper.Map<DtoWhistle[]>(result);
+            }
+            catch
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "");
+            }
+        }        
+        
+        [HttpPatch("{whistileID}")]
+        public async Task<IActionResult> PatchWhistle(int whistleID, List<PatchDto> patchDtos)
+        {
+            //patchDtos {
+                
+            //};                                           TODO ADD PATCH FOR WHISTLE
+            //_repository.ApplyPatchAsync()
             return BadRequest();
         }
     }

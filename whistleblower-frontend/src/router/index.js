@@ -19,6 +19,7 @@ import HandleSubjectsPage from '../components/admin/HandleSubjectsPage.vue';
 
 // Lawyer
 import WhistleHandlerPage from '../components/lawyer/WhistleHandler.vue';
+import LawyerBox from '../components/lawyer/LawyerBox.vue';
 
 Vue.use(VueRouter);
 
@@ -26,6 +27,14 @@ const routes = [{
   path: '/',
   name: 'HomePage',
   component: HomePage,
+  meta: { guest: true },
+},
+{
+  path: '/inbox',
+  name: 'lawyerBox',
+  component: LawyerBox,
+  props: true,
+  meta: { requiresAuth: true, lawyerAuth: true },
 },
 {
   path: '/create',

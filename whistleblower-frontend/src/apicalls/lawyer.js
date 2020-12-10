@@ -1,32 +1,45 @@
 import axios from 'axios';
 
-const whistle = {
+const lawyer = {
+  async getWhistlesByLawyerID(token, input) {
+    let responseData;
+    await axios.get(`whistle/lawyer/${input}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((response) => {
+      responseData = response.data;
+    });
+    return responseData;
+  },
+  async getLawyerFirstLoginById(token, input) {
+    let responseData;
+    await axios.get(`authenticate/firstlogin/${input}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((response) => {
+      responseData = response.data;
+    });
+    return responseData;
+  },
+  async ChangeLawyerPassword(token, id, password, newpassword) {
+    let responseData;
+    await axios.post(`authenticate/changepassword/${id}/${password}/${newpassword}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((response) => {
+      responseData = response.data;
+    });
+    return responseData;
+  },
   async getAll(token) {
     let responseData;
-    await axios.get('Whistle',
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }).then((response) => {
-      responseData = response.data;
-    });
-    return responseData;
-  },
-  async create(input) {
-    let responseData;
-    await axios.post('whistle', input, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then((response) => {
-      responseData = response.data;
-    });
-    return responseData;
-  },
-  async getByUserId(token, userId) {
-    let responseData;
-    await axios.get(`whistle/userid/${userId}`, {
+    await axios.get('authenticate/lawyers', {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -36,9 +49,9 @@ const whistle = {
     });
     return responseData;
   },
-  async update(token, whistleToUpdate) {
+  async create(token, input) {
     let responseData;
-    await axios.put(`Whistle/${whistleToUpdate.whistleID}`, whistleToUpdate, {
+    await axios.post('authenticate/register', input, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -47,18 +60,7 @@ const whistle = {
       responseData = response.data;
     });
     return responseData;
-  },
-  async createUser() {
-    let responeData;
-    await axios.post('Authenticate/registerUser', {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then((response) => {
-      responeData = response.data;
-    });
-    return responeData;
   },
 };
 
-export default whistle;
+export default lawyer;

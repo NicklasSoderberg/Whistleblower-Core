@@ -49,8 +49,8 @@
             <vs-td>
               {{ tr.modified }}
             </vs-td>
-            <vs-td edit @click="edit = tr, editProp = 'lawyerName', editActive = true">
-              {{ tr.lawyerName }}
+            <vs-td edit @click="edit = tr, editProp = 'lawyerID', editActive = true">
+              {{ getLawyerNameByID(tr.lawyerID) }}
             </vs-td>
           </vs-tr>
         </template>
@@ -60,7 +60,7 @@
       </vs-table>
       <vs-dialog v-model="editActive">
         <template #header>
-            <h3 v-if="editProp == 'lawyerName'">Ändra advokat</h3>
+            <h3 v-if="editProp == 'lawyerID'">Ändra advokat</h3>
             <h3 v-if="editProp == 'currentStatus'">Ändra status</h3>
         </template>
         <vs-row type="flex" justify="center" align="center">
@@ -77,22 +77,11 @@
             Avslutad
           </vs-option>
         </vs-select>
-        <vs-select @change="editActive = false" block v-if="editProp == 'lawyerName'"
+        <vs-select @change="editActive = false, editStatus(edit), openNotification(4000)"
+                    block v-if="editProp == 'lawyerID'"
                   placeholder="Select" v-model="edit[editProp]">
-          <vs-option value="Sven">
-            Sven
-          </vs-option>
-          <vs-option value="Göran">
-            Göran
-          </vs-option>
-          <vs-option value="Gunnar">
-            Gunnar
-          </vs-option>
-          <vs-option value="Erik">
-            Erik
-          </vs-option>
-          <vs-option value="Gösta">
-            Gösta
+          <vs-option :key="index" v-for="(item, index) in lawyers" :value="item.id">
+            {{item.firstName + ' ' + item.lastName}}
           </vs-option>
         </vs-select>
         </vs-row>
@@ -103,10 +92,13 @@
 <script>
 import whistle from '../../apicalls/whistle';
 import NotificationHelper from './NotificationHelper.vue';
+import lawyer from '../../apicalls/lawyer';
+import mix from '../../mixins/myMixin';
 
 export default {
   components: {},
   name: 'TableWhistle',
+  mixins: [mix],
   data: () => ({
     selected: { name: '' },
     active: false,
@@ -114,14 +106,24 @@ export default {
     page: 1,
     max: 10,
     editActive: false,
-    edit: null,
+    edit: {},
     editProp: {},
     whistles: [],
+    lawyers: [],
   }),
   methods: {
-    fillTable() {
-      whistle.getAll(this.$store.getters.StateUserToken).then((response) => {
-        this.whistles = response;
+    async fillTable() {
+      const loading = this.$vs.loading();
+      setTimeout(() => {
+        whistle.getAll(this.$store.getters.StateUserToken).then((response) => {
+          this.whistles = response;
+          loading.close();
+        });
+      }, 500);
+    },
+    async getLawyers() {
+      lawyer.getAll(this.$store.getters.StateUserToken).then((response) => {
+        this.lawyers = response;
       });
     },
     updateWhistle(whistleToUpdate) {
@@ -140,9 +142,19 @@ export default {
         content: NotificationHelper,
       });
     },
+    getLawyerNameByID(lawyerID) {
+      let lawyerResult;
+      // eslint-disable-next-line prefer-const
+      lawyerResult = this.lawyers.find((n) => n.id === lawyerID);
+      if (typeof lawyerResult === 'undefined') {
+        return 'Lägg till';
+      }
+      return `${lawyerResult.firstName} ${lawyerResult.lastName}`;
+    },
   },
-  mounted() {
-    this.fillTable();
+  async mounted() {
+    await this.getLawyers();
+    await this.fillTable();
   },
 };
 </script>

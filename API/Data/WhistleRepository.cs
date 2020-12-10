@@ -45,7 +45,7 @@ namespace API.Data
 
         public async Task<Conversation[]> GetConversation(int WhistleID)
         {
-            IQueryable<Conversation> query = _context.Conversations.Where(c => c.WhistleID == WhistleID);
+            IQueryable<Conversation> query = _context.Conversations.Where(c => c.WhistleID == WhistleID).OrderBy(x => x.ConversationID);
             return await query.ToArrayAsync();
         }
 
@@ -59,6 +59,11 @@ namespace API.Data
         {
             IQueryable<File> query = _context.Files.Where(c => c.WhistleID == WhistleID);
             return await query.ToArrayAsync();
+        }
+        public async Task<Whistle> GetUserWhistle(Guid userId)
+        {
+            IQueryable<Whistle> query = _context.Whistles.Where(c => c.UserID == userId);
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<Subject[]> GetAllSubjects(bool getOnlyActive = false)
@@ -79,6 +84,12 @@ namespace API.Data
         {
             IQueryable<Subject> query = _context.Subjects.Where(c => c.SubjectID == subjectID);
             return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Whistle[]> GetLawyerWhistles(Guid LawyerId)
+        {
+            IQueryable<Whistle> query = _context.Whistles.Where(c => c.LawyerID == LawyerId);
+            return await query.ToArrayAsync();
         }
     }
 }

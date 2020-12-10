@@ -12,6 +12,11 @@ using System.Threading.Tasks;
 using API.Areas.Identity.Data;
 using API.Authentication;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using API.Data.Entities;
+using System.Net.Http;
+using System.Net;
+using System.Net.Http.Headers;
 
 namespace JWTAuthentication.Controllers
 {
@@ -48,7 +53,7 @@ namespace JWTAuthentication.Controllers
                 {
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
-               
+
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 
                 var token = new JwtSecurityToken(
@@ -63,21 +68,56 @@ namespace JWTAuthentication.Controllers
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     expiration = token.ValidTo,
-                    role = userRoles[0]
-            });
+                    role = userRoles[0],
+                    userId = user.Id,
+                    firstlogin = user.FirstLogin
+                });
             }
             return Unauthorized();
         }
 
         [HttpPost]
-        [Route("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        [Route("registerUser")]
+        public async Task<IActionResult> registerUser()
         {
-            if(!(Array.IndexOf(UserRoles.Roles, model.Role) >= 0))
+            var generatedUsername = await AutoGenerateID(false);
+            var generatedPassword = await AutoGenerateID(true);
+
+            var userExists = await userManager.FindByNameAsync(generatedUsername.Value);
+            if (userExists != null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+
+            AppUser user = new AppUser()
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Invalid role!" });
-            }
-            
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = generatedUsername.Value
+            };
+            var result = await userManager.CreateAsync(user, generatedPassword.Value);
+
+            if (!await roleManager.RoleExistsAsync("User"))
+                await roleManager.CreateAsync(new IdentityRole("User"));
+
+            if (await roleManager.RoleExistsAsync("User"))
+                await userManager.AddToRoleAsync(user, "User");
+
+            if (!result.Succeeded)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+
+            var returnUserId = await userManager.FindByNameAsync(generatedUsername.Value);
+
+            return Ok(new
+            {
+                userId = returnUserId.Id,
+                username = generatedUsername.Value,
+                password = generatedPassword.Value
+            });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> register([FromBody] RegisterLawyerModel model)
+        {
             var userExists = await userManager.FindByNameAsync(model.Username);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
@@ -85,20 +125,99 @@ namespace JWTAuthentication.Controllers
             AppUser user = new AppUser()
             {
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username
+                UserName = model.Username,
+                Email = model.Email,
+                PhoneNumber = model.Phone,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                FirstLogin = true,
             };
             var result = await userManager.CreateAsync(user, model.Password);
 
-            if (!await roleManager.RoleExistsAsync(model.Role))
-                await roleManager.CreateAsync(new IdentityRole(model.Role));
+            if (!await roleManager.RoleExistsAsync("Lawyer"))
+                await roleManager.CreateAsync(new IdentityRole("Lawyer"));
 
-            if (await roleManager.RoleExistsAsync(model.Role))
-                await userManager.AddToRoleAsync(user, model.Role);
+            if (await roleManager.RoleExistsAsync("Lawyer"))
+                await userManager.AddToRoleAsync(user, "Lawyer");
+
 
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+        }
+
+
+        [HttpPost]
+        [Route("changepassword/{id}/{password}/{newpassword}")]
+        //[Authorize(Roles = "Lawyer")] TODO fixa authorize för lawyer
+        public async Task<IActionResult> changeLawyerPassword(string id, string password, string newpassword)
+        {
+            AppUser user = await userManager.FindByIdAsync(id);
+            var result = await userManager.ChangePasswordAsync(user,password,newpassword);
+            user.FirstLogin = false;
+            await userManager.UpdateAsync(user);
+            return Ok(result);
+        }
+
+        //[Authorize(Roles = "Admin")]
+        [HttpGet]
+        [Route("lawyers")]
+        public async Task<IActionResult> lawyers()
+        {
+            var lawyers = await userManager.GetUsersInRoleAsync("Lawyer");
+            List<Lawyer> AllLawyers = new List<Lawyer>();
+            foreach (AppUser l in lawyers)
+                AllLawyers.Add(new Lawyer
+                {
+                    Id = l.Id,
+                    Email = l.Email,
+                    FirstName = l.FirstName,
+                    LastName = l.LastName,
+                    PhoneNumber = l.PhoneNumber
+                });
+            return Ok(AllLawyers);
+        }
+        [Authorize(Roles = "Lawyer")]
+        [HttpGet]
+        [Route("firstlogin/{id}")]
+        public async Task<IActionResult> firstlogin(string id)
+        {
+            var lawyer = await userManager.FindByIdAsync(id);
+            if(lawyer != null)
+            {
+                return Ok(lawyer.FirstLogin);
+            }
+            return NotFound();
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<ActionResult<string>> AutoGenerateID(bool isPassword)
+        {
+            Random r = new Random();
+            string generatedID = "";
+            for (int i = 0; i < 9; i++)
+            {
+                if (i == 3 || i == 4 || i == 8)
+                {
+                    char c = Convert.ToChar(r.Next(65, 90));
+                    generatedID += c;
+                }
+                else
+                {
+                    generatedID += r.Next(0, 9).ToString();
+                }
+            }
+            if (!isPassword)
+            {
+                var userExists = await userManager.FindByNameAsync(generatedID);
+                    if (userExists != null)
+                    {
+                        await AutoGenerateID(false);
+                    }
+            }
+
+            return new ActionResult<string>(generatedID);            
         }
     }
 }

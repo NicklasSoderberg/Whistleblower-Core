@@ -1,11 +1,31 @@
 <template>
-  <div >
+  <div id="spaceframe">
     <vs-row
           justify="center"
           align="center">
-     <vs-col id="columntable">
+          <vs-dialog blur not-close v-model="active2">
+            <vs-row justify="center">
+            <h3>Ändra lösenord</h3>
+            </vs-row>
+            <vs-row justify="center">
+            <vs-input placeholder="Gammalt Lösenord" type="password" v-model="password">
+            </vs-input>
+            </vs-row>
+            <vs-row justify="center">
+            <vs-input placeholder="Nytt Lösenord" type="password" v-model="newpassword">
+            </vs-input>
+            </vs-row>
+            <vs-row justify="center">
+              <vs-button @click="ChangePassword()">
+                Ändra lösenord
+              </vs-button>
+            </vs-row>
+            <vs-row>
+              <p>Vid första inloggning måste du ändra lösenord av säkerhetskäl</p>
+            </vs-row>
+          </vs-dialog>
       <vs-table
-      id="table"
+        id="table"
         v-model="selected"
         >
         <template #header>
@@ -13,106 +33,95 @@
         </template>
         <template #thead>
           <vs-tr>
-            <vs-th class="Id" sort @click="users = $vs.sortData($event ,users, 'Id')">
-                  Id
-              </vs-th>
-              <vs-th class="status" sort @click="users = $vs.sortData($event ,users, 'status')">
-                  Status
-              </vs-th>
-            <vs-th class="whistle" sort @click="users = $vs.sortData($event ,users, 'name')">
+            <vs-th class="whistle" sort
+                                  @click="whistles = $vs.sortData($event, whistles, 'lastSender')">
+              <span class="bx bxs-message"></span>
+            </vs-th>
+            <vs-th class="whistle" sort
+                                  @click="whistles = $vs.sortData($event, whistles, 'whistleID')">
+              ID
+            </vs-th>
+            <vs-th class="whistle" sort
+                                  @click="whistles = $vs.sortData($event, whistles, 'aboutInfo')">
               Ärende
             </vs-th>
-            <vs-th class="type" sort @click="users = $vs.sortData($event ,users, 'email')">
-              Typ
+              <vs-th class="status" sort
+                                    @click="whistles = $vs.sortData($event, whistles,
+                                    'currentStatus')">
+                  Status
+              </vs-th>
+            <vs-th class="type" sort @click="whistles = $vs.sortData($event, whistles, 'created')">
+              Skapad
             </vs-th>
-            <vs-th >
+            <vs-th class="type" sort @click="whistles = $vs.sortData($event, whistles, 'modified')">
+              Ändrad
             </vs-th>
           </vs-tr>
         </template>
         <template #tbody>
           <vs-tr
             :key="i"
-            v-for="(tr, i) in $vs.getPage($vs.getSearch(users, search), page, max)"
+            v-for="(tr, i) in $vs.getPage($vs.getSearch(whistles, search), page, max)"
             :data="tr"
             :is-selected="selected == tr"
           >
+          <vs-td>
+             <span v-if="tr.lastSender === 1" class="bx bxs-message"></span>
+            </vs-td>
+          <vs-td>
+             {{ tr.whistleID}}
+            </vs-td>
            <vs-td>
-                <p style="float:left;">
-              {{ tr.Id }}
-              </p>
+             {{ tr.aboutInfo}}
             </vs-td>
             <vs-td>
-           <div class="statusrow" v-if="tr.status == 'Aktiv'"
-           style="background-color:green; ">
-           <h3 style="text-align:center; color:white;">Aktiv</h3>
-           </div>
-       <div class="statusrow" v-else-if="tr.status == 'Hanteras'"
-           style="background-color:orange; ">
-           <h3 style="text-align:center; color:white;">Hanteras</h3>
-           </div>
-       <div class="statusrow" v-else-if="tr.status == 'Avslutad'"
-           style="background-color:red;">
-           <h3 style="text-align:center; color:white;">Avslutad</h3>
-           </div>
-            </vs-td>
-            <vs-td>
-                <p style="float:left;">
-              {{ tr.name }}
-              </p>
+             {{ tr.currentStatus}}
             </vs-td>
             <vs-td >
-                <p style="float:left;" >
-              {{ tr.email }}
-            </p>
+              {{tr.created}}
             </vs-td>
-            <vs-td>
-            <vs-button @click="SelectWhistle($event,tr),active2=!active2">
-                Välj
-            </vs-button>
+            <vs-td >
+             {{tr.modified}}
             </vs-td>
           </vs-tr>
         </template>
         <template #footer>
-          <vs-pagination v-model="page" :length="$vs.getLength($vs.getSearch(users, search), max)"/>
+          <vs-pagination v-model="page"
+                          :length="$vs.getLength($vs.getSearch(whistles, search), max)"/>
         </template>
       </vs-table>
-     </vs-col>
+     <vs-row
+          justify="center"
+          align="center">
+     <vs-button @click="openWhistle()">Välj</vs-button>
+     </vs-row>
     </vs-row>
-    <vs-dialog blur width="850px" not-center v-model="active2">
+    <vs-dialog blur width="850px" not-center v-model="active">
         <template #header>
           <vs-row>
-           <p> <b>Ärende:</b> {{selected.Id}}</p>
+           <p> <b>Ärende:</b> {{selected.whistleID}}</p>
           </vs-row>
         </template>
         <vs-row style="text-align:center;">
         <vs-col>
         <div class="con-content">
-          <p><b>Status:</b></p>
-          <vs-select style="margin:0 auto;"
-           v-bind="{placeholder:selected.status}" v-model="value">
-        <vs-option label="Aktiv" style="background-color:green;">
-          Aktiv
-        </vs-option>
-        <vs-option label="Hanteras" style="background-color:orange;">
-          Hanteras
-        </vs-option>
-        <vs-option label="Avslutad" style="background-color:firebrick;">
-          Avslutad
-        </vs-option>
-      </vs-select>
+          <p><b>Status</b></p>
+          <p>{{selected.currentStatus}}</p>
       <p><b>Vad gäller ärendet?</b></p>
-      <p>{{selected.email}}</p>
+      <p>{{selected.aboutInfo}}</p>
       <p><b>Detaljer om ärendet</b></p>
-      <p>{{selected.name}}</p>
+      <p>{{selected.descriptionInfo}}</p>
       <p><b>När inträffade händelsen?</b></p>
-      <p>{{selected.when}}</p>
+      <p>{{selected.whenInfo}}</p>
       <p><b>Vart inträffade händelsen?</b></p>
-      <p>{{selected.where}}</p>
-      <vs-row  justify="center">
-        <vs-button @click="active2=false" >
+      <p>{{selected.whereInfo}}</p>
+      <p><b>Vet några andra anställda om händelsen?</b></p>
+      <p>{{selected.otherEmployeeInfo}}</p>
+      <vs-row id="buttons" justify="center">
+        <vs-button @click="active=false" >
               Stäng
             </vs-button>
-            <vs-button v-on:click="RouteClick('SafepostBox')" >
+            <vs-button v-on:click="RouteClick()" >
               Safebox
             </vs-button>
       </vs-row>
@@ -126,61 +135,77 @@
 
 </style>
 <script>
+import lawyer from '../../apicalls/lawyer';
+
 export default {
   name: 'WhistleHandler',
   data: () => ({
+    firstlogin: null,
+    active2: null,
+    password: '',
+    newpassword: '',
     selected: '',
-    SelectedWhistle: {
-      Id: 0,
-      status: '',
-      name: '',
-      email: '',
-      when: '',
-      where: '',
-    },
-    active2: false,
+    SelectedWhistle: {},
+    active: false,
     search: '',
     allCheck: false,
     page: 1,
-    max: 15,
-    active: 0,
+    max: 30,
+    editActive: false,
+    edit: null,
+    editProp: {},
     value: '',
-    users: [
-      {
-        Id: 1,
-        status: 'Avslutad',
-        name: 'Skander sålde hemligheter',
-        email: 'Dataskyddken och brott mot IT-säkerhet',
-        when: 'Igår',
-        where: 'På kontoret',
-      },
-      {
-        Id: 2,
-        status: 'Aktiv',
-        name: 'Skddander sålde hemligheter',
-        email: 'Dataskyddkebab och brott mot IT-säkerhet',
-        when: 'Igår',
-        where: 'På kontoret',
-      },
-      {
-        Id: 3,
-        status: 'Hanteras',
-        name: 'Skander såfflde hemligheter',
-        email: 'Dataskyddtest och brott mot IT-säkerhet',
-        when: 'Igår',
-        where: 'På kontoret',
-      },
-    ],
+    whistles: [{ aboutInfo: '' }], // Är den tom & bindad snear tabellen
   }),
   methods: {
-    RouteClick(route) {
-      this.$router.push(route);
+    ChangePassword() {
+      lawyer.ChangeLawyerPassword(this.$store.getters.StateUserToken,
+        this.$store.getters.StateUserId,
+        this.password, this.newpassword);
+      this.active2 = !this.active2;
+    },
+    RouteClick() {
+      // this.$router.push(route, params({ this.selected.whistleID});
+
+      this.$router.push({ path: 'inbox', name: 'lawyerBox', params: { whistleID: this.selected.whistleID } });
+    },
+    openNotification(duration) {
+      // eslint-disable-next-line no-unused-vars
+      const noti = this.$vs.notification({
+        duration,
+        progress: 'auto',
+        sticky: true,
+        color: 'success',
+        text: 'Var snäll välj ett ärende i listan',
+      });
     },
     // eslint-disable-next-line no-unused-vars
-    SelectWhistle(a, whistle) {
-      this.selected = whistle;
-      console.log(whistle);
+    openWhistle() {
+      if (this.selected === '') {
+        this.openNotification(4000);
+      } else {
+        this.active = true;
+      }
     },
+    async getWhistles() {
+      await lawyer.getWhistlesByLawyerID(this.$store.getters.StateUserToken,
+        this.$store.getters.StateUserId).then((response) => {
+        this.whistles = response;
+      });
+    },
+    async getFirstLogin() {
+      await lawyer.getLawyerFirstLoginById(this.$store.getters.StateUserToken,
+        this.$store.getters.StateUserId).then((response) => {
+        this.firstlogin = response;
+        if (this.firstlogin === true) {
+          this.active2 = true;
+        }
+      });
+    },
+  },
+  async mounted() {
+    await this.getWhistles();
+    await this.getFirstLogin();
   },
 };
 </script>
@@ -191,21 +216,14 @@ h3 {
 .W100{
   width: 100%;
 }
-@media (max-width: 900px){
-#columntable {
-    width: 100%;
+#spaceframe{
+  margin-left: 25px;
+  margin-right: 25px;
 }
+#buttons{
+  margin-top: 55px;
 }
-@media(min-width: 901px)
-{
-  #columntable {
-    width: 50%;
-}
-}
-.statusrow{
-  width:100%;
-  border-radius:4%;
-  border-style:solid;
-  border-width: 1px;
+#table{
+  margin-top: 55px;
 }
 </style>
