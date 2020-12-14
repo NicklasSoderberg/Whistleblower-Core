@@ -24,7 +24,7 @@
         <vs-navbar-item
           :active="curRoute == 'FollowUp'"
           id="FollowUp"
-          v-on:click="RouteClick('FollowUp')"
+          v-on:click="RouteClick('Login')"
         >
           Följ upp ärende
         </vs-navbar-item>
@@ -44,7 +44,8 @@
           icon-after
         >
           SafePostBox
-          <i class="bx bxs-message"></i>
+          <i class="bx bxs-message"
+          v-if="whistle.lastSender == 0"></i>
         </vs-navbar-item>
       </template>
       <template v-else-if="userRole == 'Lawyer'">
@@ -106,6 +107,7 @@
 
 <script>
 import { mapActions } from 'vuex';
+import whistleApi from '../apicalls/whistle';
 
 export default {
   data: () => ({
@@ -121,17 +123,25 @@ export default {
     userRole() {
       return this.$store.getters.StateUserRole;
     },
-    checkMessages() {
-      return this.newMessage ? 'bx bxs-bell-ring msgicon' : 'bx bx-bell msgicon';
-    },
+  },
+  async mounted() {
+    this.interval = setInterval(() => this.checkCurrentRoute(), 1000);
   },
   methods: {
+    async getWhistle() {
+      await whistleApi.getByUserId(this.$store.getters.StateUserToken,
+        this.$store.getters.StateUserId).then((response) => {
+        this.whistle = response;
+      });
+    },
     RouteClick(route) {
-      if (this.userRole === 'User') {
-        console.log('testing');
-      }
       this.$router.push(route);
       this.curRoute = this.$route.name;
+    },
+    async checkCurrentRoute() {
+      if (this.userRole === 'User') {
+        await this.getWhistle();
+      }
     },
     ...mapActions(['LogOut']),
     async LogOutUser() {
