@@ -106,7 +106,7 @@ export default {
         whistleId,
       ).then((response) => {
         this.conversations = response;
-        console.log(this.conversations);
+        console.log(`testing${this.conversations}`);
       });
 
       this.answerDisable();
@@ -119,10 +119,16 @@ export default {
     answerDisable() {
       const i = this.conversations.length - 1;
       const lastMsg = this.conversations[i];
-      if (lastMsg.sender === 1) {
-        this.disableButton = true;
+      console.log(i);
+      console.log(lastMsg);
+      if (i !== -1) {
+        if (lastMsg.sender === 1) {
+          this.disableButton = true;
+        } else {
+          this.disableButton = false;
+        }
       } else {
-        this.disableButton = false;
+        this.disableButton = true;
       }
     },
   },
