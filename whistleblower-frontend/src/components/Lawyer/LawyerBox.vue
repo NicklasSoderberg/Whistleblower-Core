@@ -37,17 +37,25 @@
       >
         Svara
       </vs-button>
+      <div v-if="images.length > 0">
+        <img class="images" v-for="(image, i) in images" :key="i" :src="image.base64" />
+      </div>
+      <div v-else>
+        <p>No images added</p>
+      </div>
   </div>
   </body>
 </template>
 
 <script>
 import conversations from '../../apicalls/conversation';
+import files from '../../apicalls/file';
 import mix from '../../mixins/myMixin';
 
 export default {
   name: 'lawyerBox',
   mixins: [mix],
+  components: { },
   data: () => ({
     whistle: {},
     conversations: [],
@@ -55,6 +63,7 @@ export default {
     disableButton: false,
     newMessage: false,
     postMessage: '',
+    images: {},
   }),
   props: {
     whistleID: {},
@@ -87,12 +96,19 @@ export default {
           this.conversations = response;
         });
     },
+    async getFiles() {
+      await files.get(this.$store.getters.StateUserToken, this.whistleID)
+        .then((response) => {
+          this.images = response;
+        });
+    },
     async sendMessage() {
       await this.createPostMessage();
     },
   },
   async mounted() {
     await this.getConversations();
+    await this.getFiles();
   },
 };
 </script>
@@ -182,5 +198,8 @@ width: 90px;
 h1 {
   font-size: 27px;
   margin-top: 100px;
+}
+.images {
+  margin-top: 15px;
 }
 </style>
