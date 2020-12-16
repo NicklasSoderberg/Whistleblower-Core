@@ -6,7 +6,7 @@
      <form @submit.prevent="submit">
      <vs-row  justify="center" style="margin-bottom: 5px">
        <div justify="left" align="left" :class="{ 'form-group--error': $v.username.$error }">
-        <vs-input :state="stateUser" v-model="username"
+        <vs-input :state="stateUser" id="username" v-model="username"
         v-model.trim="$v.username.$model"
         :placeholder="userPlaceholder">
           <template #icon>
@@ -17,7 +17,7 @@
         </vs-row>
         <vs-row justify="center" align="center">
         <div justify="center" align="center" :class="{ 'form-group--error': $v.password.$error }">
-        <vs-input :state="statePass" type="password"
+        <vs-input :state="statePass" id="password" type="password"
         v-model="password" :placeholder="passPlaceholder"
         v-model.trim="$v.password.$model"
         >
@@ -33,6 +33,9 @@
         <vs-row justify="center">
         <div class="error" v-if="submitStatus === 'ERROR'"><p
         id="errortext">Fälten måste vara ifyllda</p></div>
+      </vs-row>
+      <vs-row justify="center">
+         <p id="text">WARNING! Caps lock is ON.</p>
       </vs-row>
         <vs-row justify="center" align="center">
         <vs-button gradient primary type="submit">Logga in</vs-button>
@@ -122,12 +125,20 @@ export default {
     },
     checkCapsLock() {
       const input = document.getElementById('username');
-
+      const input2 = document.getElementById('password');
+      const text = document.getElementById('text');
       input.addEventListener('keyup', (event) => {
         if (event.getModifierState('CapsLock')) {
-          this.caps = true;
+          text.style.display = 'block';
         } else {
-          this.caps = false;
+          text.style.display = 'none';
+        }
+      });
+      input2.addEventListener('keyup', (event) => {
+        if (event.getModifierState('CapsLock')) {
+          text.style.display = 'block';
+        } else {
+          text.style.display = 'none';
         }
       });
     },
@@ -160,8 +171,11 @@ export default {
       }
     },
   },
+  mounted() {
+    this.checkCapsLock();
+  },
 };
-</script >
+</script>
 
 <style scoped>
 .button-positioning {
